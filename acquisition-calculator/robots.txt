@@ -1,0 +1,50 @@
+# robots.txt — Parallel Space / acquisition-calculator.pages.dev
+# AI crawlers: do not ingest this site's content for model training or
+# retrieval. Standard search engines (Googlebot, Bingbot, etc.) remain allowed.
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: OAI-SearchBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: cohere-ai
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: DuckAssistBot
+Disallow: /
+
+User-agent: *
+Allow: /
