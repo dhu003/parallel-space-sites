@@ -1,0 +1,35 @@
+name: Smoke test
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 16 * * 1"
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check calculator root loads
+        run: |
+          set -e
+          code=$(curl -sS -o /tmp/root.html -w "%{http_code}" https://acquisition-calculator.pages.dev/)
+          test "$code" = "200"
+          grep -q "Small Business Acquisition Calculator" /tmp/root.html
+      - name: Check robots.txt serves rules, not HTML
+        run: |
+          set -e
+          code=$(curl -sS -o /tmp/robots.txt -w "%{http_code}" https://acquisition-calculator.pages.dev/robots.txt)
+          test "$code" = "200"
+          ctype=$(curl -sSI https://acquisition-calculator.pages.dev/robots.txt | grep -i "^content-type:" | tr -d '\r')
+          echo "$ctype" | grep -qi "text/plain"
+          grep -q "User-agent: GPTBot" /tmp/robots.txt
+          ! grep -qi "<!doctype html\|<html" /tmp/robots.txt
+      - name: Check SEO pages and Quick Screen respond
+        run: |
+          set -e
+          for u in https://car-wash-acquisition.pages.dev/ https://trucking-acquisition.pages.dev/ https://quick-screen.pages.dev/Parallel_Space_Quick_Screen.xlsx; do
+            code=$(curl -sS -o /dev/null -w "%{http_code}" "$u")
+            test "$code" = "200"
+          done
