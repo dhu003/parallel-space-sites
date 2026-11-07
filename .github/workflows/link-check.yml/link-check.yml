@@ -1,0 +1,44 @@
+name: Link check
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 16 * * 2"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  lychee:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check links
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --verbose --no-progress
+            --exclude '^https://(www\.)?(linkedin\.com|facebook\.com|x\.com|twitter\.com|pinterest\.com)'
+            --exclude-mail
+            --format detailed
+            --output /tmp/lychee-report.md
+            acquisition-calculator/index.html
+            https://car-wash-acquisition.pages.dev/
+            https://trucking-acquisition.pages.dev/
+            https://quick-screen.pages.dev/Parallel_Space_Quick_Screen.xlsx
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: File an issue on broken links
+        if: failure() && steps.lychee.outcome == 'failure'
+        run: |
+          if gh issue list --state open --search "Broken links detected" --json title --jq '.[].title' | grep -qx "Broken links detected"; then
+            echo "Issue already open, skipping."
+          else
+            gh issue create --title "Broken links detected" --body-file /tmp/lychee-report.md
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
