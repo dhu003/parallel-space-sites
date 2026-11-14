@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>What Business Can I Afford? | Free SBA Affordability Calculator — Parallel Space</title>
+<meta name="description" content="Free calculator: enter the cash you can put down and the income you need, pick an industry, and see the biggest business you can afford — and the smallest deal that still pays you. Uses researched SDE multiples, a 10% SBA loan rate, and the 1.25x DSCR test." />
+<link rel="canonical" href="https://reverse-calculator.pages.dev/" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How much business can I buy with $100,000 down?","acceptedAnswer":{"@type":"Answer","text":"It depends on the industry and the loan. With a 10% SBA down payment, $100,000 down caps the price at $1,000,000. But the price also has to leave you enough after loan payments: the smallest deal that pays a $150,000 income is about $624,000 for a home-services company and about $950,000 for an HVAC company at a 10% rate over 10 years. This calculator shows both ends of that window."}},
+{"@type":"Question","name":"What DSCR do SBA lenders want?","acceptedAnswer":{"@type":"Answer","text":"SBA lenders test debt-service coverage at 1.25x: the business's seller's discretionary earnings (SDE) must be at least 1.25 times the annual loan payment. Under SOP 50 10 8.1 the test runs on historical earnings, so a forward-looking estimate is a benchmark to compare against, not a pass/fail verdict."}},
+{"@type":"Question","name":"Why does the same down payment buy a bigger restaurant than a car wash?","acceptedAnswer":{"@type":"Answer","text":"Because price is a multiple of SDE, and multiples differ by industry. A restaurant sells at about 2.15x SDE, a car wash at about 4.5x SDE. One dollar of earnings buys more restaurant than car wash — but the restaurant also earns a thinner margin, so the loan payment eats more of it."}},
+{"@type":"Question","name":"Is this lender approval?","acceptedAnswer":{"@type":"Answer","text":"No. This is an estimate from researched industry averages, not a lender decision. Real approval depends on the actual business's tax returns, your credit, the lender's underwriting, and a quality-of-earnings review where required. Verify every number with your lender before you make an offer."}}
+]}
+</script>
+<style>
+:root{color-scheme:light dark;--bg:#f4f7f8;--surface:#fff;--surface-2:#eaf0f2;--ink:#102229;--muted:#53676f;--line:#ccd8dc;--blue:#087eae;--blue-deep:#075c80;--aqua:#bdebf2;--orange:#e76528;--orange-soft:#fff0e8;--positive:#087a62;--negative:#bb3c3c;--shadow:0 20px 55px rgba(27,57,66,.11);--radius:18px}
+@media (prefers-color-scheme:dark){:root{--bg:#0c151a;--surface:#111f25;--surface-2:#172930;--ink:#eef7f8;--muted:#a5b7bd;--line:#2e434b;--blue:#4dc4ec;--blue-deep:#8fdcf4;--aqua:#183d48;--orange:#ff8851;--orange-soft:#3d251c;--positive:#62d8b7;--negative:#ff8e8e;--shadow:0 20px 60px rgba(0,0,0,.28)}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px),var(--bg);background-size:42px 42px;color:var(--ink);font-family:"IBM Plex Sans",-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+button,input,select,a{font:inherit}a{color:inherit}
+.shell{width:min(1240px,calc(100% - 32px));margin:0 auto;padding:32px 0 64px}
+.company-brand{display:flex;align-items:center;min-height:88px;margin:0 0 14px}.company-logo{display:block;width:116px;height:auto;mix-blend-mode:multiply}.company-tagline{margin:0 0 0 20px;color:var(--muted);font-size:14px;font-style:italic;line-height:1.4}@media (prefers-color-scheme:dark){.company-logo{mix-blend-mode:normal;background:#f8fbfc;border-radius:6px}}.top-link{margin:14px 0 0;max-width:780px;font-size:14px}.top-link a,.verdict-link a{color:var(--blue);font-weight:600}.verdict-link{margin:12px 0 0;font-size:14px}.brand-block{display:flex;gap:20px;align-items:center;margin-top:22px;padding:20px 22px;background:var(--surface);border:1px solid var(--line);border-radius:12px}.brand-block h2{margin:0 0 4px;font-size:19px}.brand-block p{margin:0 0 6px;color:var(--muted);font-size:14px}.brand-block p:last-child{margin-bottom:0}.brand-photo{width:120px;height:auto;border-radius:8px;flex-shrink:0}@media (max-width:560px){.brand-block{flex-direction:column;align-items:flex-start}}
+.kicker{display:inline-flex;gap:9px;align-items:center;color:var(--blue-deep);font:600 12px/1 "IBM Plex Mono",ui-monospace,monospace;letter-spacing:.04em}
+.kicker::before{content:"";width:26px;height:3px;background:var(--orange)}
+h1{margin:7px 0 0;max-width:820px;font-size:clamp(34px,5.2vw,62px);line-height:.99;letter-spacing:-.045em}
+.lede{margin:18px 0 0;max-width:780px;color:var(--muted);font-size:17px}
+.intro-note{margin-top:22px;border-top:3px solid var(--ink);padding-top:12px;color:var(--muted);font-size:13px;max-width:780px}
+.intro-note strong{display:block;color:var(--ink);font-size:14px;margin-bottom:3px}
+.workspace{display:grid;grid-template-columns:350px minmax(0,1fr);gap:20px;align-items:start;margin-top:26px}
+@media (max-width:900px){.workspace{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)}
+.inputs{position:sticky;top:16px;border-radius:8px 8px var(--radius) var(--radius);overflow:hidden}
+@media (max-width:900px){.inputs{position:static}}
+.panel-head{padding:20px 22px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.panel-head h2{margin:0 0 4px;font-size:19px;letter-spacing:-.015em}
+.panel-head p{margin:0;color:var(--muted);font-size:13px}
+.input-scroll{padding:20px 22px 24px}
+.input-group+.input-group{border-top:1px solid var(--line);margin-top:19px;padding-top:19px}
+.input-group h3{margin:0 0 13px;font:600 11px/1 "IBM Plex Mono",ui-monospace,monospace;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.group-note{margin:-6px 0 13px;color:var(--muted);font-size:11.5px;line-height:1.45}
+.field{display:grid;grid-template-columns:1fr 116px;align-items:center;gap:14px;margin:10px 0}
+.field label{font-size:14px}
+.input-wrap{position:relative}
+.input-wrap input{width:100%;min-height:42px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);padding:8px 31px 8px 10px;text-align:right;font:600 13px "IBM Plex Mono",ui-monospace,monospace;outline:none}
+.input-wrap input:focus,.industry-select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(8,126,174,.17)}
+.input-wrap .unit{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--muted);font:600 12px "IBM Plex Mono",ui-monospace,monospace;pointer-events:none}
+.field-stack{margin:10px 0 13px}.field-stack label{display:block;margin-bottom:7px;font-size:14px}
+.industry-select{width:100%;min-height:48px;border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--ink);padding:9px 12px;font:600 13px "IBM Plex Mono",ui-monospace,monospace;outline:none;cursor:pointer}
+.preset-note{margin:12px 0 0;color:var(--muted);font-size:12.5px;line-height:1.5}
+.preset-note strong{color:var(--ink)}
+.results{display:flex;flex-direction:column;gap:20px;min-width:0}
+.scoreboard{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:700px){.scoreboard{grid-template-columns:repeat(2,1fr)}}
+.metric{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:16px}
+.metric span{display:block;color:var(--muted);font-size:12px}
+.metric strong{display:block;margin-top:4px;font-size:24px;letter-spacing:-.02em}
+.metric small{color:var(--muted);font-size:11.5px}
+.verdict{border-radius:var(--radius);padding:22px 24px;border:1px solid var(--line);box-shadow:var(--shadow)}
+.verdict.good{background:var(--blue-deep);color:#fff}
+.verdict.tight{background:var(--orange-soft);color:var(--ink);border-color:var(--orange)}
+.verdict.bad{background:#fbecec;color:var(--ink);border-color:var(--negative)}
+@media (prefers-color-scheme:dark){.verdict.bad{background:#3a1d1d}}
+.verdict h2{margin:0 0 6px;font-size:26px;letter-spacing:-.02em}
+.verdict.good h2{color:#fff}
+.verdict p{margin:0 0 8px;font-size:15px}
+.verdict p:last-child{margin-bottom:0}
+.verdict .window{font-size:20px;font-weight:700}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px}
+.card h2{margin:0 0 4px;font-size:19px;letter-spacing:-.015em}
+.card h3{margin:0 0 10px;font-size:16px}
+.card>p{color:var(--muted);font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted);font:600 11px "IBM Plex Mono",ui-monospace,monospace;letter-spacing:.05em;text-transform:uppercase}
+td strong{font-size:14px}
+.formula{font:500 13px "IBM Plex Mono",ui-monospace,monospace;color:var(--muted);background:var(--surface-2);border-radius:8px;padding:12px 14px;margin:14px 0 0;line-height:1.7}
+.formula b{color:var(--ink)}
+.method{color:var(--muted);font-size:12.5px;margin:14px 0 0}
+.method strong{color:var(--ink)}
+.levers li{margin:7px 0;font-size:14.5px}
+.levers li strong{color:var(--blue-deep)}
+.next-step{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.next-step a.cta{display:inline-block;background:var(--orange);color:#fff;text-decoration:none;font-weight:600;border-radius:8px;padding:12px 18px}
+.next-step a.cta:hover{filter:brightness(1.07)}
+.next-step p{margin:0;color:var(--muted);font-size:13px;max-width:520px}
+.services-line{font-size:13.5px;color:var(--muted)}
+.verdict-services{border-top:1px solid var(--line);margin-top:18px;padding-top:18px}
+.verdict-services-kicker{margin:0 0 6px;color:var(--orange);font:600 11px "IBM Plex Mono",ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase}
+.verdict-services h3{margin:0 0 8px;font-size:18px}
+.verdict-services p{margin:0 0 10px;font-size:14px;color:var(--muted)}
+.verdict-services ul{margin:0 0 12px;padding-left:20px;font-size:14.5px}
+.verdict-services li{margin:6px 0}
+.verdict-services-note{font-size:12.5px}
+a.verdict-services-cta{display:inline-block;background:var(--blue-deep);color:#fff;text-decoration:none;font-weight:600;border-radius:8px;padding:11px 16px}
+.kit-inline{border-top:1px solid var(--line);margin-top:18px;padding-top:18px}
+.kit-inline label{display:block;font-weight:600;margin-bottom:6px}
+.kit-inline p{margin:0 0 10px;color:var(--muted);font-size:13.5px}
+.kit-inline input[type=email]{width:100%;min-height:44px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);padding:9px 12px;outline:none}
+.kit-inline input[type=email]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(8,126,174,.17)}
+.sample-gate-button{appearance:none;border:0;background:var(--orange);color:#fff;font-weight:600;border-radius:8px;padding:12px 18px;cursor:pointer;margin-top:10px}
+.kit-status{color:var(--muted);font-size:12.5px;margin-top:8px}
+.faq details{border-top:1px solid var(--line);padding:14px 0}
+.faq details:first-of-type{border-top:0}
+.faq summary{cursor:pointer;font-weight:600;font-size:15px}
+.faq p{color:var(--muted);font-size:14px;margin:8px 0 0}
+.sources-block{font-size:13px;color:var(--muted)}
+.sources-block summary{cursor:pointer;font-weight:600;color:var(--ink)}
+.sources-block p{margin:10px 0}
+.disclaimer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+footer{width:min(1240px,calc(100% - 32px));margin:0 auto;padding:0 0 32px;color:var(--muted);font-size:12px}
+.compare-wrap{overflow-x:auto}
+.compare-wrap table{min-width:640px}
+.pill{display:inline-block;font:600 11px "IBM Plex Mono",ui-monospace,monospace;border-radius:999px;padding:3px 9px}
+.pill.ok{background:#e2f3ee;color:var(--positive)}
+.pill.no{background:#fbecec;color:var(--negative)}
+@media (prefers-color-scheme:dark){.pill.ok{background:#123f35}.pill.no{background:#3a1d1d}}
+</style>
+</head>
+<body>
+<main class="shell">
+<div class="company-brand" aria-label="Parallel Space">
+  <img class="company-logo" src="data:image/png;base64,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" alt="Parallel Space" width="220" height="295" />
+  <p class="company-tagline">Two worlds. We build the bridges.</p>
+</div>
+  <span class="kicker">PARALLEL SPACE · FREE TOOL</span>
+  <h1>What Business Can I Afford?</h1>
+  <p class="lede">Enter the cash you can put down and the income you need to live on. Pick an industry. We show you the biggest business your cash can buy — and the smallest deal that still pays you after the loan. If the smallest is bigger than the biggest, that industry does not work on these terms yet.</p>
+  <p class="intro-note"><strong>Start with your money, not with a listing.</strong> Most buyers fall in love with a business first and check the loan second. This runs it the other way round, using the same researched SDE multiples and loan terms as the main acquisition calculator.</p>
+  <p class="top-link">Already have a deal in mind? <a href="https://acquisition-calculator.pages.dev" target="_blank" rel="noopener noreferrer">Price it in the full acquisition calculator →</a></p>
+
+  <div class="workspace">
+    <aside class="panel inputs" aria-label="Your numbers">
+      <div class="panel-head"><h2>Your numbers</h2><p>Changes update the answer live.</p></div>
+      <div class="input-scroll">
+        <div class="input-group">
+          <h3>Your money</h3>
+          <div class="field"><label for="downCash">Cash you can put down</label><div class="input-wrap"><input id="downCash" type="number" min="0" step="5000" value="100000" inputmode="numeric" /><span class="unit">$</span></div></div>
+          <p class="group-note">Money for the down payment itself. Closing costs and a cash buffer are added separately below, so the total cash you need will be higher than this number.</p>
+          <div class="field"><label for="incomeNeed">Income you need per year</label><div class="input-wrap"><input id="incomeNeed" type="number" min="0" step="5000" value="150000" inputmode="numeric" /><span class="unit">$</span></div></div>
+          <p class="group-note">The pay you need to take home from the business each year, after the loan is paid. Think salary replacement, not revenue.</p>
+        </div>
+        <div class="input-group">
+          <h3>Industry</h3>
+          <div class="field-stack">
+            <label for="industrySelect">What kind of business?</label>
+            <select class="industry-select" id="industrySelect"></select>
+          </div>
+          <p class="preset-note" id="presetNote"></p>
+        </div>
+        <div class="input-group">
+          <h3>Loan terms</h3>
+          <p class="group-note">SBA 7(a) defaults. The down payment here is the SBA minimum — 10% total, at least 5% from your own funds.</p>
+          <div class="field"><label for="loanRate">Interest rate</label><div class="input-wrap"><input id="loanRate" type="number" min="0" max="30" step="0.25" value="10" inputmode="decimal" /><span class="unit">%</span></div></div>
+          <div class="field"><label for="loanTerm">Loan term</label><div class="input-wrap"><input id="loanTerm" type="number" min="1" max="30" step="1" value="10" inputmode="numeric" /><span class="unit">yrs</span></div></div>
+          <div class="field"><label for="downPct">Down payment</label><div class="input-wrap"><input id="downPct" type="number" min="5" max="100" step="1" value="10" inputmode="numeric" /><span class="unit">%</span></div></div>
+          <div class="field"><label for="dscrFloor">Lender DSCR test</label><div class="input-wrap"><input id="dscrFloor" type="number" min="1" max="2" step="0.05" value="1.25" inputmode="decimal" /><span class="unit">x</span></div></div>
+          <p class="group-note">DSCR is the lender's coverage test: business earnings divided by the annual loan payment. SBA lenders look for 1.25x. Self-storage is the exception — it is normally bought with long-term property debt, not a 10-year SBA loan, so it fails this test on purpose. See the note under the verdict.</p>
+        </div>
+        <div class="input-group">
+          <h3>Cash on top</h3>
+          <div class="field"><label for="wcBuffer">Working-capital buffer</label><div class="input-wrap"><input id="wcBuffer" type="number" min="0" step="5000" value="25000" inputmode="numeric" /><span class="unit">$</span></div></div>
+          <p class="group-note">Cash to keep in the business after closing — for payroll, suppliers, and the first slow month. Closing costs are 2% of the price on top of this (legal and diligence typically run 1–4%).</p>
+        </div>
+      </div>
+    </aside>
+
+    <section class="results" aria-label="Affordability results">
+      <div class="scoreboard" aria-live="polite">
+        <div class="metric"><span>Biggest price your cash allows</span><strong id="mMaxPrice">—</strong><small>down payment ÷ down %</small></div>
+        <div class="metric"><span>Smallest price that pays you</span><strong id="mMinPrice">—</strong><small>income need ÷ cash left per $1</small></div>
+        <div class="metric"><span>Cash left per year at max price</span><strong id="mLeftover">—</strong><small>after the loan is paid</small></div>
+        <div class="metric"><span>DSCR at any price</span><strong id="mDscr">—</strong><small>lender test, needs 1.25x</small></div>
+      </div>
+
+      <div class="verdict" id="verdictBox" role="status">
+        <h2 id="verdictTitle">—</h2>
+        <p class="window" id="verdictWindow"></p>
+        <p id="verdictBody"></p>
+        <p id="verdictNote"></p>
+      </div>
+      <p class="verdict-link">Found your range? <a href="https://acquisition-calculator.pages.dev" target="_blank" rel="noopener noreferrer">Price a specific deal in the full calculator →</a></p>
+
+      <div class="card">
+        <h2>At the biggest price your cash allows</h2>
+        <p>What that deal looks like, using this industry's researched averages.</p>
+        <table>
+          <thead><tr><th>Line</th><th>Amount</th></tr></thead>
+          <tbody id="maxTable"></tbody>
+        </table>
+        <div class="formula" id="formulaBox"></div>
+        <p class="method"><strong>Why DSCR does not change with price:</strong> a bigger business in the same industry earns proportionally more, so earnings and loan payment grow together. What changes with price is the cash you need to close and the cash you keep each year — that is why the answer is a window, not a single number.</p>
+      </div>
+
+      <div class="card">
+        <h2>At the smallest price that pays you</h2>
+        <p>The cheapest deal in this industry that still leaves you your income after the loan.</p>
+        <table>
+          <thead><tr><th>Line</th><th>Amount</th></tr></thead>
+          <tbody id="minTable"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>What would change the answer?</h2>
+        <ul class="levers" id="leversList"></ul>
+      </div>
+
+      <div class="card next-step">
+        <div>
+          <h2>Found your range? Price a specific deal.</h2>
+          <p>Take the price into the full acquisition calculator — five-year P&amp;L, cash flow, working capital, and both DSCRs — with this industry already selected.</p>
+        </div>
+        <a class="cta" id="priceDealLink" href="https://acquisition-calculator.pages.dev" target="_blank" rel="noopener noreferrer">Price a specific deal →</a>
+      </div>
+
+      <div class="card">
+        <h2>Every industry, on your numbers</h2>
+        <p>Same cash, same income need, same loan. Sorted by the smallest price that pays you. A lower multiple or a fatter margin means a smaller deal can pay you.</p>
+        <div class="compare-wrap"><table>
+          <thead><tr><th>Industry</th><th>Price multiple</th><th>SDE margin</th><th>Smallest price that pays you</th><th>DSCR</th><th>Fits your cash?</th></tr></thead>
+          <tbody id="compareTable"></tbody>
+        </table></div>
+        <p class="method">Multiples and margins are the researched defaults from the main calculator. Self-storage is priced on a 6.5% cap rate, not a multiple — see the sources below.</p>
+      </div>
+
+      <div class="card">
+        <div class="verdict-services">
+          <p class="verdict-services-kicker">Built for your deal, not just the model</p>
+          <h3>Want this run on your actual numbers?</h3>
+          <p>This calculator uses industry averages. Your deal has its own earnings, its own lender, and its own diligence questions — David runs those by hand.</p>
+          <ul>
+            <li><strong>Model Build — $1,500</strong> · a full acquisition model built for your deal</li>
+            <li><strong>Valuation — $950</strong> · an independent read on what the business is worth</li>
+            <li><strong>FP&amp;A Advisory — $125/hr</strong> · diligence, cash flow, and lender questions, answered</li>
+          </ul>
+          <a class="verdict-services-cta" href="https://contra.com/david_hu_o9deripy" target="_blank" rel="noopener noreferrer">See services on Contra</a>
+          <p class="verdict-services-note">Built by David Hu, Director of Finance &amp; Accounting, MBA — 15+ years in manufacturing and logistics finance.</p>
+        </div>
+        <!-- TODO (Kit): create a NEW Kit form named "Email me my affordability" and replace 10186063 in the action URL below with its numeric form ID. Then set up a Kit automation on that form that emails the subscriber their affordability summary using the captured custom fields (affordability_industry, max_price, min_price, income_needed, dscr, monthly_payment, verdict). Do NOT reuse form 10123322 (Suggest a business), 10123459 (Quick Screen), or the "Email me this deal" form. Until the form ID is replaced, this form will not deliver anything. -->
+        <form class="kit-inline" id="emailAffordForm" action="https://app.kit.com/forms/10186063/subscriptions" method="post" target="kitSubmitFrame">
+          <label for="emailAffordAddress">Email me my affordability</label>
+          <p>Get your price window, DSCR, and monthly payment in your inbox — so you have the numbers when you talk to a seller or your lender.</p>
+          <input id="emailAffordAddress" name="email_address" type="email" maxlength="120" autocomplete="email" required placeholder="Email address" />
+          <input type="hidden" name="fields[affordability_industry]" id="emailAffordIndustry" value="" />
+          <input type="hidden" name="fields[max_price]" id="emailAffordMaxPrice" value="" />
+          <input type="hidden" name="fields[min_price]" id="emailAffordMinPrice" value="" />
+          <input type="hidden" name="fields[income_needed]" id="emailAffordIncome" value="" />
+          <input type="hidden" name="fields[dscr]" id="emailAffordDscr" value="" />
+          <input type="hidden" name="fields[monthly_payment]" id="emailAffordMonthly" value="" />
+          <input type="hidden" name="fields[verdict]" id="emailAffordVerdict" value="" />
+          <button class="sample-gate-button" type="submit">Email me my affordability</button>
+          <p class="kit-status" id="emailAffordStatus" aria-live="polite"></p>
+        </form>
+        <iframe name="kitSubmitFrame" style="display:none" title="Form submission"></iframe>
+      </div>
+
+      <div class="card faq">
+        <h2>Questions buyers actually ask</h2>
+        <details><summary>How much business can I buy with $100,000 down?</summary><p>With a 10% SBA down payment, $100,000 down caps the price at $1,000,000. But the price also has to leave you enough after loan payments. For a $150,000 income need at 10% over 10 years, the smallest deal that pays you is about $624,000 for home services and about $950,000 for HVAC. This page shows both ends of that window for every industry.</p></details>
+        <details><summary>What DSCR do SBA lenders want?</summary><p>1.25x. The business's SDE must be at least 1.25 times the annual loan payment. Under SOP 50 10 8.1 the test runs on historical earnings, so a forward-looking estimate is a benchmark to compare against, not a pass/fail verdict. A quality-of-earnings report is mandatory for purchase prices of $3M or more.</p></details>
+        <details><summary>Why does the same down payment buy a bigger restaurant than a car wash?</summary><p>Price is a multiple of SDE, and multiples differ by industry. A restaurant sells at about 2.15x SDE, a car wash at about 4.5x SDE. One dollar of earnings buys more restaurant than car wash — but the restaurant also earns a thinner margin, so the loan payment eats more of it. The comparison table below shows the trade-off for all 19 industries.</p></details>
+        <details><summary>Is this lender approval?</summary><p>No. This is an estimate from researched industry averages, not a lender decision. Real approval depends on the actual business's tax returns, your credit, the lender's underwriting, and a quality-of-earnings review where required. Verify every number with your lender before you make an offer.</p></details>
+      </div>
+
+      <details class="card sources-block">
+        <summary>Where the numbers come from</summary>
+        <p><strong>Industry multiples and margins</strong> — the same researched defaults as the main acquisition calculator (fetched from the live repo, Nov 12, 2026): revenue, EBITDA margin, and SDE multiple per preset. SDE margin is EBITDA margin with the owner's pay already inside it, except general contractor, where SDE runs ~23% of revenue including owner comp while EBITDA alone is 8% (BizBuySell). Self-storage is priced on NOI at a 6.5% cap rate (sector avg 6.59%), not a multiple.</p>
+        <p><strong>Loan rate 10%</strong> — SBA 7(a) typical: prime 7.00% + 3.0% max spread for loans over $350K (Fed H.15 / SBA, Oct 2026). Re-check after the Dec 8–9 FOMC meeting.</p>
+        <p><strong>DSCR 1.25x</strong> — SBA 7(a) test under SOP 50 10 8.1, effective Oct 1, 2026.</p>
+        <p><strong>Down payment 10%</strong> — SBA 7(a) minimum (5% from your own funds); 15% is a typical buyer contribution.</p>
+        <p><strong>Closing costs 2%</strong> — typical deal costs run 1–4% of price before financing fees (legal + diligence 1–3%).</p>
+        <p class="disclaimer"><strong>Disclaimer:</strong> This free calculator is an educational planning tool, not investment, accounting, tax, or lending advice. It uses industry averages, not any specific business's financials. Validate assumptions and deal terms with qualified advisers and your lender before relying on the output.</p>
+      </details>
+    </section>
+  </div>
+      <section class="brand-block" aria-label="About Parallel Space">
+        <img class="brand-photo" src="parallel-space-towers.jpg" alt="Parallel Space twin towers" width="480" height="672" loading="lazy" />
+        <div>
+          <h2>Built by Parallel Space</h2>
+          <p>Two worlds. We build the bridges.</p>
+          <p>Parallel Space builds free tools for small business buyers — price a deal, check what you can afford, and run the numbers before you make an offer.</p>
+        </div>
+      </section>
+</main>
+<footer><p>© 2026 Parallel Space. All rights reserved. The models, presets, and research on this page are the original work of David Hu and may not be copied or reproduced. · <a href="https://acquisition-calculator.pages.dev" target="_blank" rel="noopener noreferrer">Main acquisition calculator</a></p></footer>
+
+<script>
+(function () {
+  "use strict";
+  /* Presets reused from the live main calculator (fetched Nov 12, 2026 from
+     raw.githubusercontent.com/dhu003/parallel-space-sites/main/acquisition-calculator/index.html).
+     SDE margin = EBITDA margin from the live finance block (100 - variableCost - labor - opex),
+     with the live common defaults (variable 15 / labor 22 / opex 28) filling gaps.
+     Exceptions, exactly as the live calculator notes them:
+       - general-contractor: SDE ~23% of revenue incl. owner comp (EBITDA alone is 8%).
+       - general-business: unit economics, $2.5M revenue, 24% EBITDA, priced at 4.0x SDE
+         (the live calculator's fallback: max(EBITDA x 4, revenue x 0.6)).
+       - self-storage: priced on NOI at a 6.5% cap rate, not a multiple; NOI is 65% of revenue.
+     typicalRev = Year-1 revenue at the live preset's default drivers. */
+  var PRESETS = [
+    {slug:"home-services", name:"Home services", mult:2.61, sdeMargin:0.19, typicalRev:1870000, note:"Typical mixed-trade company: 17–21% EBITDA, this default 19% — $1.87M revenue, $355,300 EBITDA. Price: 2.61x SDE (BizBuySell sold avg)."},
+    {slug:"hvac", name:"HVAC contractor", mult:2.83, sdeMargin:0.17, typicalRev:4290000, note:"Typical: 8–14% EBITDA (small shop), 14–20% mixed; this default 17%. Price: 2.83x SDE (BizBuySell sold avg). About a $2.06M price at default size."},
+    {slug:"car-wash", name:"Car wash", mult:4.5, sdeMargin:0.35, typicalRev:1166400, note:"Typical mature express site: $1.5–3.0M revenue, 35–50% four-wall EBITDA (MMCG 2026). Price: 4.5x SDE."},
+    {slug:"auto-repair", name:"Auto repair shop", mult:2.85, sdeMargin:0.20, typicalRev:1881000, note:"Typical shop: $750K–1.5M revenue, 15–25% net margin. Price: 2.85x SDE (BizBuySell sold avg)."},
+    {slug:"auto-parts", name:"Auto parts store", mult:3.0, sdeMargin:0.13, typicalRev:1760000, note:"Typical gross margin 40–45%. Price: 3.0x SDE."},
+    {slug:"self-storage", name:"Self-storage", mult:null, capRate:0.065, sdeMargin:0.65, typicalRev:796320, note:"Priced on NOI at a 6.5% cap rate (sector avg 6.59%), not a multiple. NOI is 65% of revenue — and it is normally bought with long-term property debt, not a 10-year SBA loan."},
+    {slug:"dental-clinic", name:"Dental clinic", mult:2.63, sdeMargin:0.28, typicalRev:964440, note:"Typical practice: 15–25% EBITDA; this default a larger healthy practice at 28% EBITDA. Price: 2.63x SDE (BizBuySell sold avg)."},
+    {slug:"veterinary-clinic", name:"Veterinary clinic", mult:4.5, sdeMargin:0.24, typicalRev:2538200, note:"Typical clinic: 18–24% EBITDA; this default a healthy 4-doctor hospital at 24% EBITDA. Price: 4.5x SDE."},
+    {slug:"craft-brewery", name:"Craft brewery", mult:3.7, sdeMargin:0.22, typicalRev:2218230, note:"Typical: 21–33% EBITDA at a taproom/distribution blend; this default 22%. Price: 3.7x SDE."},
+    {slug:"laundromat", name:"Laundromat", mult:3.65, sdeMargin:0.28, typicalRev:442485, note:"Typical sold store: about $220K revenue, 20–25% EBITDA; this default a large modern store at 28% EBITDA. Price: 3.65x SDE."},
+    {slug:"trucking-logistics", name:"Trucking & Logistics", mult:3.0, sdeMargin:0.23, typicalRev:3519000, note:"Typical sold carrier: about $1.95M revenue, 20.5% SDE margin; this default a 12-truck carrier at 23% EBITDA. Price: 3.0x SDE (BizBuySell sold avg). Cost split per ATRI 2025."},
+    {slug:"3pl-warehousing", name:"3PL & Warehousing", mult:3.0, sdeMargin:0.15, typicalRev:4393080, note:"Typical 3PL: 5–15% EBITDA (up to about 18% tech-enabled); this default 15%. Price: 3.0x SDE."},
+    {slug:"restaurant", name:"Restaurant", mult:2.15, sdeMargin:0.13, typicalRev:900000, note:"Typical sold restaurant: about $718K revenue, 10–20% EBITDA. Price: 2.15x SDE (BizBuySell sold avg)."},
+    {slug:"boba-milk-tea", name:"Boba & Milk Tea Shop", mult:2.5, sdeMargin:0.20, typicalRev:420000, note:"Typical single shop: $250K–450K revenue, 10–25% net margin; this default 20% EBITDA. Price: 2.5x SDE."},
+    {slug:"ecommerce", name:"E-commerce Brand", mult:3.32, sdeMargin:0.18, typicalRev:1752000, note:"Typical FBA brand: 15–25% net margin; sold median about $1.0M revenue; this default 18% EBITDA. Price: 3.32x SDE (BizBuySell sold avg)."},
+    {slug:"roofing", name:"Roofing company", mult:2.1, sdeMargin:0.16, typicalRev:2940000, note:"Typical residential replacement: 10–16% EBITDA; this default 16%. Price: 2.1x SDE."},
+    {slug:"general-contractor", name:"General contractor", mult:2.56, sdeMargin:0.23, typicalRev:2100000, note:"Typical small GC: $2.1M revenue, 8% EBITDA — but SDE runs ~23% of revenue including the owner's pay, and the 2.56x price is on SDE. Price: 2.56x SDE (BizBuySell 2025, 408 construction sales)."},
+    {slug:"home-health", name:"Home health care agency", mult:3.0, sdeMargin:0.20, typicalRev:1164800, note:"Typical small agency (non-medical, private-pay): ~$1.1M revenue, 20% EBITDA, sells at ~3.0x SDE (BizBuySell sold median $700K)."},
+    {slug:"general-business", name:"General business", mult:4.0, sdeMargin:0.24, typicalRev:2500000, note:"Build from your own unit economics. Default: $2.5M revenue, 24% EBITDA. Priced at 4.0x SDE (the main calculator's fallback)."}
+  ];
+  var CLOSING_PCT = 0.02; /* closing costs, 2% of price */
+  var MAIN_CALC = "https://acquisition-calculator.pages.dev";
+
+  function money(n) {
+    if (!isFinite(n)) return "—";
+    var sign = n < 0 ? "−" : "", a = Math.abs(n);
+    if (a >= 1000000) return sign + "$" + (a / 1000000).toFixed(a >= 10000000 ? 1 : 2) + "M";
+    if (a >= 1000) return sign + "$" + Math.round(a / 1000).toLocaleString("en-US") + "K";
+    return sign + "$" + Math.round(a).toLocaleString("en-US");
+  }
+  function fullMoney(n) {
+    if (!isFinite(n)) return "—";
+    return (n < 0 ? "−" : "") + "$" + Math.round(Math.abs(n)).toLocaleString("en-US");
+  }
+  /* Annual loan payment per $1 borrowed. Standard amortisation. */
+  function annualFactor(ratePct, years) {
+    var y = Math.max(1, years || 10);
+    if (!ratePct || ratePct <= 0) return 1 / y;
+    var r = ratePct / 100 / 12, n = y * 12;
+    return 12 * r / (1 - Math.pow(1 + r, -n));
+  }
+  function sdePerDollar(p) { return p.capRate ? p.capRate : 1 / p.mult; }
+  function priceLabel(p) { return p.capRate ? ("NOI / " + (p.capRate * 100).toFixed(1) + "% cap rate") : (p.mult.toFixed(2) + "x SDE"); }
+
+  /* Core math. SDE = seller's discretionary earnings: cash the business throws off
+     in a year before loan payments. Price = SDE x multiple (or SDE / cap rate).
+     DSCR = SDE / annual debt service. Because both SDE and debt service scale with
+     price, DSCR is the same at every price for a given preset and loan — the window
+     between min and max price is what the income need and the down payment decide. */
+  function computeAffordability(p, inp) {
+    var downPct = Math.min(100, Math.max(0, inp.downPct)) / 100;
+    var af = annualFactor(inp.rate, inp.term);
+    var sdeD = sdePerDollar(p);
+    var dsD = (1 - downPct) * af;
+    var leftD = sdeD - dsD;
+    var dscr = dsD > 0 ? sdeD / dsD : Infinity;
+    var maxPrice = downPct > 0 ? inp.downCash / downPct : 0;
+    var minPrice = null;
+    if (leftD > 0 && inp.incomeNeed > 0) minPrice = inp.incomeNeed / leftD;
+    if (inp.incomeNeed <= 0) minPrice = 0;
+    function atPrice(price) {
+      var sde = price * sdeD;
+      var loan = price * (1 - downPct);
+      var monthly = loan * af / 12;
+      var annualDS = monthly * 12;
+      return {
+        price: price, sde: sde, revenue: p.sdeMargin > 0 ? sde / p.sdeMargin : 0,
+        loan: loan, monthly: monthly, annualDS: annualDS,
+        leftover: sde - annualDS, down: price * downPct,
+        cashToClose: price * downPct + price * CLOSING_PCT + (inp.wcBuffer || 0),
+        dscr: dscr
+      };
+    }
+    var atMax = atPrice(maxPrice);
+    var atMin = minPrice !== null ? atPrice(minPrice) : null;
+    var verdict = "bad", title = "", body = "", note = ""; /* verdict is set per branch below */
+    if (leftD <= 0) {
+      title = "Not affordable on these terms";
+      body = "In this industry, at this multiple and loan cost, the loan payment eats all of the earnings — a bigger deal makes it worse, not better. Every $1 of price produces " + money(sdeD) + " of SDE but costs " + money(dsD) + " a year in loan payments.";
+      note = "This is a loan-structure problem, not a size problem. See what would change it below.";
+    } else if (dscr < inp.dscrFloor) {
+      title = "Not affordable — the lender test fails";
+      body = "DSCR is " + dscr.toFixed(2) + "x, below the " + inp.dscrFloor.toFixed(2) + "x lenders look for. The test fails at every price in this industry on these terms, because earnings and loan payments grow together.";
+      note = "A lower rate, a longer term, or a lower-priced multiple is what moves DSCR — not a bigger or smaller deal.";
+    } else if (minPrice === null) {
+      title = "Enter your numbers";
+      body = "Add the cash you can put down and the income you need to see your price window.";
+      note = "";
+    } else if (minPrice > maxPrice) {
+      var short = minPrice * downPct - inp.downCash;
+      title = "Not affordable yet — the gap is " + money(short) + " more down";
+      body = "The smallest " + p.name.toLowerCase() + " deal that pays you " + fullMoney(inp.incomeNeed) + " a year costs " + fullMoney(minPrice) + ", which needs " + fullMoney(minPrice * downPct) + " down. Your cash caps you at " + fullMoney(maxPrice) + ".";
+      note = "You are " + fullMoney(short) + " of down payment short — or the income need, the rate, or the industry has to move. See below.";
+    } else if (minPrice >= 0.8 * maxPrice) {
+      verdict = "tight";
+      title = "Tight — you can afford it, barely";
+      body = "Your window is " + fullMoney(minPrice) + " to " + fullMoney(maxPrice) + ". That works, but there is little room for a bad year, a higher rate, or earnings below average. Diligence matters more, not less, on a tight deal.";
+      note = "DSCR is " + dscr.toFixed(2) + "x, above the " + inp.dscrFloor.toFixed(2) + "x test — the tightness is the size of the window, not the lender test.";
+    } else {
+      verdict = "good";
+      title = "Affordable — your window is " + fullMoney(minPrice) + " to " + fullMoney(maxPrice);
+      body = "A " + p.name.toLowerCase() + " deal in that range leaves you at least " + fullMoney(inp.incomeNeed) + " a year after the loan, and DSCR is " + dscr.toFixed(2) + "x against the " + inp.dscrFloor.toFixed(2) + "x lender test. Bigger in the window means more income — up to " + fullMoney(atMax.leftover) + " a year at the top.";
+      note = "Averages got you here; a real deal is priced on its own tax returns. Price a specific one below before you trust the window.";
+    }
+    return {
+      preset: p, maxPrice: maxPrice, minPrice: minPrice, sdePerDollar: sdeD,
+      dsPerDollar: dsD, leftoverPerDollar: leftD, dscr: dscr, annualFactor: af,
+      atMax: atMax, atMin: atMin, verdict: verdict, title: title, body: body, note: note
+    };
+  }
+
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = { PRESETS: PRESETS, computeAffordability: computeAffordability, annualFactor: annualFactor, money: money };
+  }
+
+  if (typeof document === "undefined") return;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var select = $("industrySelect");
+  PRESETS.forEach(function (p) {
+    var o = document.createElement("option");
+    o.value = p.slug; o.textContent = p.name;
+    select.appendChild(o);
+  });
+  select.value = "home-services";
+
+  function num(id, fallback) {
+    var v = parseFloat($(id).value);
+    return isFinite(v) ? v : fallback;
+  }
+  function row(label, value) { return "<tr><td>" + label + "</td><td><strong>" + value + "</strong></td></tr>"; }
+
+  function render() {
+    var slug = select.value;
+    var p = PRESETS.filter(function (x) { return x.slug === slug; })[0] || PRESETS[0];
+    var inp = {
+      downCash: Math.max(0, num("downCash", 100000)),
+      incomeNeed: Math.max(0, num("incomeNeed", 150000)),
+      rate: Math.max(0, num("loanRate", 10)),
+      term: Math.max(1, num("loanTerm", 10)),
+      downPct: Math.min(100, Math.max(1, num("downPct", 10))),
+      dscrFloor: Math.max(1, num("dscrFloor", 1.25)),
+      wcBuffer: Math.max(0, num("wcBuffer", 25000))
+    };
+    var r = computeAffordability(p, inp);
+    $("presetNote").innerHTML = "<strong>" + p.name + ":</strong> " + p.note +
+      " Typical size at default drivers: " + fullMoney(p.typicalRev) + " revenue, " + fullMoney(p.typicalRev * p.sdeMargin) + " SDE.";
+    $("mMaxPrice").textContent = money(r.maxPrice);
+    $("mMinPrice").textContent = r.minPrice === null ? "—" : money(r.minPrice);
+    $("mLeftover").textContent = money(r.atMax.leftover);
+    $("mDscr").textContent = isFinite(r.dscr) ? r.dscr.toFixed(2) + "x" : "—";
+
+    var box = $("verdictBox");
+    var cls = r.verdict; /* good / tight / bad, set by computeAffordability */
+    if (r.minPrice !== null && r.leftoverPerDollar > 0 && r.dscr >= inp.dscrFloor && r.minPrice <= r.maxPrice) cls = (r.minPrice >= 0.8 * r.maxPrice) ? "tight" : "good";
+    box.className = "verdict " + cls;
+    $("verdictTitle").textContent = r.title;
+    $("verdictWindow").textContent = (r.minPrice !== null && r.leftoverPerDollar > 0)
+      ? ("Window: " + fullMoney(r.minPrice) + " – " + fullMoney(r.maxPrice)) : "";
+    $("verdictBody").textContent = r.body;
+    $("verdictNote").textContent = r.note;
+
+    var a = r.atMax;
+    $("maxTable").innerHTML =
+      row("Purchase price", fullMoney(a.price)) +
+      row("Implied revenue (SDE ÷ " + Math.round(p.sdeMargin * 100) + "% margin)", fullMoney(a.revenue)) +
+      row("SDE — cash the business throws off / yr (" + priceLabel(p) + ")", fullMoney(a.sde)) +
+      row("Loan (" + Math.round((1 - inp.downPct / 100) * 100) + "% of price)", fullMoney(a.loan)) +
+      row("Monthly loan payment (" + inp.rate + "% / " + inp.term + " yrs)", fullMoney(a.monthly)) +
+      row("Annual loan payment", fullMoney(a.annualDS)) +
+      row("Cash left for you per year", fullMoney(a.leftover)) +
+      row("DSCR (SDE ÷ annual payment)", isFinite(a.dscr) ? a.dscr.toFixed(2) + "x" : "—") +
+      row("Cash to close (down + 2% closing + buffer)", fullMoney(a.cashToClose));
+    $("formulaBox").innerHTML =
+      "<b>How the window is built</b><br>" +
+      "SDE per $1 of price = " + (p.capRate ? "cap rate " + (p.capRate * 100).toFixed(1) + "%" : "1 ÷ " + p.mult.toFixed(2) + " multiple") + " = " + money(r.sdePerDollar) + "<br>" +
+      "Loan payment per $1 of price = " + (100 - inp.downPct) + "% loan × " + inp.rate + "% / " + inp.term + " yrs = " + money(r.dsPerDollar) + " / yr<br>" +
+      "Cash left per $1 of price = " + money(r.sdePerDollar) + " − " + money(r.dsPerDollar) + " = " + money(r.leftoverPerDollar) + " / yr<br>" +
+      "Smallest price that pays you = " + fullMoney(inp.incomeNeed) + " ÷ " + money(r.leftoverPerDollar) + (r.minPrice === null ? " = —" : " = " + fullMoney(r.minPrice)) + "<br>" +
+      "Biggest price your cash allows = " + fullMoney(inp.downCash) + " ÷ " + inp.downPct + "% = " + fullMoney(r.maxPrice);
+
+    var m = r.atMin;
+    $("minTable").innerHTML = m ? (
+      row("Purchase price", fullMoney(m.price)) +
+      row("Implied revenue", fullMoney(m.revenue)) +
+      row("SDE per year", fullMoney(m.sde)) +
+      row("Monthly loan payment", fullMoney(m.monthly)) +
+      row("Annual loan payment", fullMoney(m.annualDS)) +
+      row("Cash left for you per year", fullMoney(m.leftover)) +
+      row("Down payment needed", fullMoney(m.down)) +
+      row("Cash to close (down + 2% closing + buffer)", fullMoney(m.cashToClose))
+    ) : "<tr><td>No price in this industry leaves enough after the loan on these terms.</td><td></td></tr>";
+
+    /* Levers: what would change it */
+    var levers = [];
+    if (r.minPrice !== null && r.leftoverPerDollar > 0) {
+      var need = r.minPrice * (inp.downPct / 100) - inp.downCash;
+      if (need > 0) levers.push("<strong>More down:</strong> put down " + fullMoney(need) + " more (" + fullMoney(r.minPrice * (inp.downPct / 100)) + " total) and the smallest deal that pays you is in reach.");
+      else levers.push("<strong>More down:</strong> you already cover the down payment on the smallest deal that pays you — extra cash buys a bigger deal, up to " + fullMoney(r.maxPrice) + ".");
+      levers.push("<strong>Less income need:</strong> at your biggest price (" + fullMoney(r.maxPrice) + ") the business leaves you " + fullMoney(r.atMax.leftover) + " a year — that is the most this cash buys in this industry.");
+      var r15 = computeAffordability(p, { downCash: inp.downCash, incomeNeed: inp.incomeNeed, rate: inp.rate, term: 15, downPct: inp.downPct, dscrFloor: inp.dscrFloor, wcBuffer: inp.wcBuffer });
+      if (r15.minPrice !== null) levers.push("<strong>Longer term:</strong> stretching the loan to 15 years cuts the payment at max price to " + fullMoney(r15.atMax.monthly) + " a month, DSCR rises to " + r15.dscr.toFixed(2) + "x, and the smallest deal that pays you drops to " + fullMoney(r15.minPrice) + ".");
+      var r9 = computeAffordability(p, { downCash: inp.downCash, incomeNeed: inp.incomeNeed, rate: Math.max(0, inp.rate - 1), term: inp.term, downPct: inp.downPct, dscrFloor: inp.dscrFloor, wcBuffer: inp.wcBuffer });
+      if (r9.minPrice !== null) levers.push("<strong>Lower rate:</strong> at " + Math.max(0, inp.rate - 1).toFixed(2).replace(/\.00$/, "") + "% instead of " + inp.rate + "%, the smallest deal that pays you drops to " + fullMoney(r9.minPrice) + ".");
+    }
+    if (p.slug === "self-storage" && r.leftoverPerDollar <= 0) {
+      levers.push("<strong>Different debt:</strong> self-storage is normally bought with 20–25 year property debt at a lower rate and 20–25% down — not a 10-year SBA loan. Try 7%, 25 years, and 25% down and check the window again.");
+    }
+    var best = null;
+    PRESETS.forEach(function (q) {
+      if (q.slug === p.slug) return;
+      var rq = computeAffordability(q, inp);
+      if (rq.minPrice !== null && rq.leftoverPerDollar > 0 && rq.dscr >= inp.dscrFloor && rq.minPrice <= rq.maxPrice) {
+        if (!best || rq.minPrice < best.minPrice) best = rq;
+      }
+    });
+    if (best) levers.push("<strong>Different industry:</strong> the smallest deal that pays you on the same cash is a " + best.preset.name.toLowerCase() + " at " + fullMoney(best.minPrice) + " (DSCR " + best.dscr.toFixed(2) + "x). Compare all 19 below.");
+    $("leversList").innerHTML = levers.map(function (l) { return "<li>" + l + "</li>"; }).join("") || "<li>Enter your numbers above to see what moves the answer.</li>";
+
+    /* Price-a-specific-deal link: live calculator reads the industry from the URL hash. */
+    $("priceDealLink").href = MAIN_CALC + "#" + p.slug;
+
+    /* Comparison table */
+    var rows = PRESETS.map(function (q) {
+      var rq = computeAffordability(q, inp);
+      var fits = rq.minPrice !== null && rq.leftoverPerDollar > 0 && rq.dscr >= inp.dscrFloor && rq.minPrice <= rq.maxPrice;
+      return { q: q, rq: rq, fits: fits };
+    }).sort(function (a, b) {
+      var av = a.rq.minPrice === null ? Infinity : a.rq.minPrice;
+      var bv = b.rq.minPrice === null ? Infinity : b.rq.minPrice;
+      return av - bv;
+    });
+    $("compareTable").innerHTML = rows.map(function (x) {
+      return "<tr><td>" + x.q.name + "</td><td>" + (x.q.capRate ? "cap " + (x.q.capRate * 100).toFixed(1) + "%" : x.q.mult.toFixed(2) + "x") + "</td><td>" + Math.round(x.q.sdeMargin * 100) + "%</td><td><strong>" + (x.rq.minPrice === null ? "— never pays" : fullMoney(x.rq.minPrice)) + "</strong></td><td>" + (isFinite(x.rq.dscr) ? x.rq.dscr.toFixed(2) + "x" : "—") + "</td><td><span class=\"pill " + (x.fits ? "ok" : "no") + "\">" + (x.fits ? "Fits" : "No") + "</span></td></tr>";
+    }).join("");
+
+    /* Email capture hidden fields */
+    $("emailAffordIndustry").value = p.name;
+    $("emailAffordMaxPrice").value = Math.round(r.maxPrice);
+    $("emailAffordMinPrice").value = r.minPrice === null ? "" : Math.round(r.minPrice);
+    $("emailAffordIncome").value = Math.round(inp.incomeNeed);
+    $("emailAffordDscr").value = isFinite(r.dscr) ? r.dscr.toFixed(2) : "";
+    $("emailAffordMonthly").value = Math.round(r.atMax.monthly);
+    $("emailAffordVerdict").value = r.title;
+  }
+
+  ["downCash", "incomeNeed", "industrySelect", "loanRate", "loanTerm", "downPct", "dscrFloor", "wcBuffer"].forEach(function (id) {
+    $(id).addEventListener("input", render);
+    $(id).addEventListener("change", render);
+  });
+  $("emailAffordForm").addEventListener("submit", function () {
+    $("emailAffordStatus").textContent = "Sending — check your inbox for your affordability summary.";
+  });
+  render();
+})();
+</script>
+</body>
+</html>
