@@ -259,6 +259,16 @@
     .share-status { min-height:18px; margin:0; color:var(--muted); font-size:11px; }
     .share-status.success { color:var(--positive); }
     .share-method { margin:0; color:var(--muted); font-size:11px; line-height:1.45; }
+.verdict-services { margin-top:14px; padding:16px; border:1px solid var(--line); border-left:4px solid var(--orange); border-radius:7px; background:var(--surface-2); }
+.verdict-services-kicker { margin:0 0 6px; color:var(--orange); font:600 10px/1.35 "IBM Plex Mono",monospace; text-transform:uppercase; letter-spacing:.06em; }
+.verdict-services h3 { margin:0 0 6px; font-size:16px; }
+.verdict-services p { margin:0 0 10px; color:var(--muted); font-size:12px; line-height:1.5; }
+.verdict-services ul { margin:0 0 12px; padding-left:18px; color:var(--muted); font-size:12px; line-height:1.6; }
+.verdict-services ul strong { color:var(--ink); }
+.verdict-services-cta { display:flex; align-items:center; justify-content:center; min-height:42px; padding:0 14px; background:var(--orange); color:white; text-decoration:none; border-radius:6px; font-size:13px; font-weight:700; }
+.verdict-services-cta:hover { background:color-mix(in srgb,var(--orange) 88%,black); }
+.verdict-services p.verdict-services-note { margin:10px 0 0; font-size:11px; }
+.verdict-email-copy { flex-basis:100%; margin:0; color:var(--muted); font-size:12px; line-height:1.5; }
     .disclaimer { margin-top:18px; padding:14px 16px; background:var(--surface-2); border-radius:6px; color:var(--muted); font-size:12px; }
     @media (max-width:980px) { .workspace { grid-template-columns:1fr; } .inputs { position:static; } .input-scroll { max-height:none; display:grid; grid-template-columns:repeat(2,1fr); gap:20px; } .input-group + .input-group { margin:0; padding:0; border-top:0; border-left:1px solid var(--line); padding-left:20px; } }
     @media (max-width:720px) {
@@ -485,6 +495,32 @@
               <p class="share-method">Deal Score blends debt-service coverage (45%), levered IRR (35%) and equity multiple (20%). It is a screening signal, not an investment recommendation.</p>
           <p class="share-method"><strong>Lender check:</strong> the deal package already benchmarks seller DSCR against 1.25x. Under SOP 50 10 8.1, the 1.25x test runs on historical earnings — the modeled DSCR here is forward-looking, so it is a benchmark to compare against, not a pass/fail verdict.</p>
               <p class="share-method" id="emailResultsNote">Email results opens your own email client — this app sends no email itself. Copy results puts the same numbers on your clipboard.</p>
+              <div class="verdict-services">
+                <p class="verdict-services-kicker">Built for your deal, not just the model</p>
+                <h3>Want this run on your actual deal?</h3>
+                <p>This calculator prices the average case. Your deal has its own numbers, its own lender, and its own diligence questions — David runs those by hand.</p>
+                <ul>
+                  <li><strong>Model Build — $1,500</strong> · a full acquisition model built for your deal</li>
+                  <li><strong>Valuation — $950</strong> · an independent read on what the business is worth</li>
+                  <li><strong>FP&amp;A Advisory — $125/hr</strong> · diligence, cash flow, and lender questions, answered</li>
+                </ul>
+                <a class="verdict-services-cta" href="https://contra.com/david_hu_o9deripy" target="_blank" rel="noopener noreferrer">See services on Contra</a>
+                <p class="verdict-services-note">Built by David Hu, Director of Finance &amp; Accounting, MBA — 15+ years in manufacturing and logistics finance.</p>
+              </div>
+              <!-- TODO (Kit): create a NEW Kit form named "Email me this deal" and replace 10186047 in the action URL below with its numeric form ID. Then set up a Kit automation on that form that emails the subscriber their deal summary using the captured custom fields (deal_industry, purchase_price, sde_year_1, dscr_seller, dscr_lender, deal_score). Do NOT reuse form 10123322 (Suggest a business) or 10123459 (Quick Screen). Until the form ID is replaced, this form will not deliver anything. -->
+              <form class="kit-inline" id="emailDealForm" action="https://app.kit.com/forms/10186047/subscriptions" method="post" target="kitSubmitFrame">
+                <label for="emailDealAddress">Email me this deal</label>
+                <p class="verdict-email-copy">Get the verdict, price, SDE, and both DSCRs for this deal in your inbox — so you have the numbers when you talk to the seller or your lender.</p>
+                <input id="emailDealAddress" name="email_address" type="email" maxlength="120" autocomplete="email" required placeholder="Email address" />
+                <input type="hidden" name="fields[deal_industry]" id="emailDealIndustry" value="" />
+                <input type="hidden" name="fields[purchase_price]" id="emailDealPrice" value="" />
+                <input type="hidden" name="fields[sde_year_1]" id="emailDealSde" value="" />
+                <input type="hidden" name="fields[dscr_seller]" id="emailDealDscr" value="" />
+                <input type="hidden" name="fields[dscr_lender]" id="emailDealAdjDscr" value="" />
+                <input type="hidden" name="fields[deal_score]" id="emailDealScore" value="" />
+                <button class="sample-gate-button" type="submit">Email me this deal</button>
+                <p class="kit-status" id="emailDealStatus" aria-live="polite"></p>
+              </form>
               <form class="kit-inline" id="quickScreenForm" action="https://app.kit.com/forms/10123459/subscriptions" method="post" target="kitSubmitFrame"><label for="quickScreenEmail">Free Quick Screen — the one-page deal screen (Excel)</label><input id="quickScreenEmail" name="email_address" type="email" maxlength="120" autocomplete="email" required placeholder="Email address" /><button class="sample-gate-button" type="submit">Send it to me</button><p class="kit-status" id="quickScreenStatus" aria-live="polite"></p></form><p class="share-method">Price, revenue and SDE in — DSCR and a verdict out. Free, no account needed.</p>
             </div>
           </div>
@@ -773,6 +809,7 @@
       document.getElementById("copyResultsButton").addEventListener("click",copyResults);
       document.getElementById("quickScreenForm").addEventListener("submit",function(){document.getElementById("quickScreenStatus").innerHTML='Thanks — your Quick Screen is ready: <a href="https://quick-screen.pages.dev/Parallel_Space_Quick_Screen.xlsx">Download the spreadsheet</a>.';});
       document.getElementById("suggestForm").addEventListener("submit",function(){document.getElementById("suggestStatus").textContent="Thanks \u2014 suggestion received. We model the most-requested businesses first.";});;
+      document.getElementById("emailDealForm").addEventListener("submit",function(){try{var v=getInputs(),d=acquisition(v),score=dealScore(d),label=verdictLabel(score);document.getElementById("emailDealIndustry").value=current.name;document.getElementById("emailDealPrice").value=fullMoney(d.purchasePrice);document.getElementById("emailDealSde").value=fullMoney(d.sdeYear1);document.getElementById("emailDealDscr").value=verdictValue(d.dscr,"multiple");document.getElementById("emailDealAdjDscr").value=verdictValue(d.adjDscr,"multiple");document.getElementById("emailDealScore").value=score+"/100 — "+label;}catch(e){}document.getElementById("emailDealStatus").textContent="Thanks — your deal summary is on its way.";});
       var describeKeywords={"car-wash":["car wash","carwash","detailing","detail","tunnel wash","express wash","wash"],"auto-repair":["auto repair","mechanic","garage","repair shop","auto shop","brake","oil change","tire shop","tires","tyre","body shop","collision","muffler","transmission"],"auto-parts":["auto parts","parts store","parts shop","napa","autozone","o'reilly","oreilly"],"home-services":["home service","handyman","cleaning","maid","house cleaning","lawn","landscap","pest control","plumbing","plumber","electrician","electrical","painting","painter","remodel","junk removal","moving company","mover"],"hvac":["hvac","air conditioning","heating","cooling","furnace","ac repair","heat pump"],"roofing":["roofing","roofer","roof","shingle"],"self-storage":["self storage","storage unit","storage facility","mini storage","storage"],"dental-clinic":["dental","dentist","orthodont","teeth","dental clinic"],"veterinary-clinic":["veterinary","veterinarian","vet clinic","animal hospital","pet clinic","animal clinic"],"craft-brewery":["brewery","brewpub","taproom","craft beer","beer","distillery","brew"],"laundromat":["laundromat","laundromats","laundry","wash and fold","coin laundry"],"trucking-logistics":["trucking","truck","freight","carrier","logistics","fleet","haul","semi truck","trucking company"],"3pl-warehousing":["3pl","warehousing","warehouse","fulfillment","distribution center","pick and pack","third party logistics"],"restaurant":["restaurant","food truck","taco","pizza","cafe","coffee","coffee shop","bakery","diner","bar and grill","catering","eatery","sandwich","burger","sushi","food"],"boba-milk-tea":["boba","bubble tea","milk tea","boba shop","tea shop"],"ecommerce":["ecommerce","e-commerce","online store","amazon","shopify","fba","dtc","online shop","ecommerce brand"],"general-contractor":["general contractor","contractor","construction","remodeling","remodeler","home builder","homebuilder","renovation"],"home-health":["home health","home care","homehealth","homecare","caregiver","caregiving","senior care","in-home care","health care","healthcare"]};
       var describeVariants=[
         {name:"Food truck",preset:"restaurant",keywords:["food truck","foodtruck","taco truck"],drivers:{locations:1,seats:1,turns:110,check:13,days:250},maxes:{turns:300},labels:{seats:"Trucks",turns:"Orders / day"},finance:{variableCost:35,labor:22,opex:23},balance:{cash:40000,ppe:150000,debt:80000,repayment:15000},priceMultiple:2.15,exitMultiple:2.15,note:"Matched: Food truck \u2014 one truck, 110 orders a day at a $13 ticket (median truck revenue ~$350K; ticket $10\u201316). No dining room, no seats \u2014 modeled from restaurant benchmarks, adjusted for a mobile unit."},
