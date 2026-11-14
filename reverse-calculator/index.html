@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>What Business Can I Afford? | Free SBA Affordability Calculator — Parallel Space</title>
+<meta name="description" content="Free calculator: enter the cash you can put down and the income you need, pick an industry, and see the biggest business you can afford — and the smallest deal that still pays you. Uses researched SDE multiples, a 10% SBA loan rate, and the 1.25x DSCR test." />
+<link rel="canonical" href="https://acquisition-calculator.pages.dev/" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How much business can I buy with $100,000 down?","acceptedAnswer":{"@type":"Answer","text":"It depends on the industry and the loan. With a 10% SBA down payment, $100,000 down caps the price at $1,000,000. But the price also has to leave you enough after loan payments: the smallest deal that pays a $150,000 income is about $624,000 for a home-services company and about $950,000 for an HVAC company at a 10% rate over 10 years. This calculator shows both ends of that window."}},
+{"@type":"Question","name":"What DSCR do SBA lenders want?","acceptedAnswer":{"@type":"Answer","text":"SBA lenders test debt-service coverage at 1.25x: the business's seller's discretionary earnings (SDE) must be at least 1.25 times the annual loan payment. Under SOP 50 10 8.1 the test runs on historical earnings, so a forward-looking estimate is a benchmark to compare against, not a pass/fail verdict."}},
+{"@type":"Question","name":"Why does the same down payment buy a bigger restaurant than a car wash?","acceptedAnswer":{"@type":"Answer","text":"Because price is a multiple of SDE, and multiples differ by industry. A restaurant sells at about 2.15x SDE, a car wash at about 4.5x SDE. One dollar of earnings buys more restaurant than car wash — but the restaurant also earns a thinner margin, so the loan payment eats more of it."}},
+{"@type":"Question","name":"Is this lender approval?","acceptedAnswer":{"@type":"Answer","text":"No. This is an estimate from researched industry averages, not a lender decision. Real approval depends on the actual business's tax returns, your credit, the lender's underwriting, and a quality-of-earnings review where required. Verify every number with your lender before you make an offer."}}
+]}
+</script>
+<style>
+:root{color-scheme:light dark;--bg:#f4f7f8;--surface:#fff;--surface-2:#eaf0f2;--ink:#102229;--muted:#53676f;--line:#ccd8dc;--blue:#087eae;--blue-deep:#075c80;--aqua:#bdebf2;--orange:#e76528;--orange-soft:#fff0e8;--positive:#087a62;--negative:#bb3c3c;--shadow:0 20px 55px rgba(27,57,66,.11);--radius:18px}
+@media (prefers-color-scheme:dark){:root{--bg:#0c151a;--surface:#111f25;--surface-2:#172930;--ink:#eef7f8;--muted:#a5b7bd;--line:#2e434b;--blue:#4dc4ec;--blue-deep:#8fdcf4;--aqua:#183d48;--orange:#ff8851;--orange-soft:#3d251c;--positive:#62d8b7;--negative:#ff8e8e;--shadow:0 20px 60px rgba(0,0,0,.28)}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px),var(--bg);background-size:42px 42px;color:var(--ink);font-family:"IBM Plex Sans",-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+button,input,select,a{font:inherit}a{color:inherit}
+.shell{width:min(1240px,calc(100% - 32px));margin:0 auto;padding:32px 0 64px}
+.kicker{display:inline-flex;gap:9px;align-items:center;color:var(--blue-deep);font:600 12px/1 "IBM Plex Mono",ui-monospace,monospace;letter-spacing:.04em}
+.kicker::before{content:"";width:26px;height:3px;background:var(--orange)}
+h1{margin:7px 0 0;max-width:820px;font-size:clamp(34px,5.2vw,62px);line-height:.99;letter-spacing:-.045em}
+.lede{margin:18px 0 0;max-width:780px;color:var(--muted);font-size:17px}
+.intro-note{margin-top:22px;border-top:3px solid var(--ink);padding-top:12px;color:var(--muted);font-size:13px;max-width:780px}
+.intro-note strong{display:block;color:var(--ink);font-size:14px;margin-bottom:3px}
+.workspace{display:grid;grid-template-columns:350px minmax(0,1fr);gap:20px;align-items:start;margin-top:26px}
+@media (max-width:900px){.workspace{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)}
+.inputs{position:sticky;top:16px;border-radius:8px 8px var(--radius) var(--radius);overflow:hidden}
+@media (max-width:900px){.inputs{position:static}}
+.panel-head{padding:20px 22px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.panel-head h2{margin:0 0 4px;font-size:19px;letter-spacing:-.015em}
+.panel-head p{margin:0;color:var(--muted);font-size:13px}
+.input-scroll{padding:20px 22px 24px}
+.input-group+.input-group{border-top:1px solid var(--line);margin-top:19px;padding-top:19px}
+.input-group h3{margin:0 0 13px;font:600 11px/1 "IBM Plex Mono",ui-monospace,monospace;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.group-note{margin:-6px 0 13px;color:var(--muted);font-size:11.5px;line-height:1.45}
+.field{display:grid;grid-template-columns:1fr 116px;align-items:center;gap:14px;margin:10px 0}
+.field label{font-size:14px}
+.input-wrap{position:relative}
+.input-wrap input{width:100%;min-height:42px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);padding:8px 31px 8px 10px;text-align:right;font:600 13px "IBM Plex Mono",ui-monospace,monospace;outline:none}
+.input-wrap input:focus,.industry-select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(8,126,174,.17)}
+.input-wrap .unit{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--muted);font:600 12px "IBM Plex Mono",ui-monospace,monospace;pointer-events:none}
+.field-stack{margin:10px 0 13px}.field-stack label{display:block;margin-bottom:7px;font-size:14px}
+.industry-select{width:100%;min-height:48px;border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--ink);padding:9px 12px;font:600 13px "IBM Plex Mono",ui-monospace,monospace;outline:none;cursor:pointer}
+.preset-note{margin:12px 0 0;color:var(--muted);font-size:12.5px;line-height:1.5}
+.preset-note strong{color:var(--ink)}
+.results{display:flex;flex-direction:column;gap:20px;min-width:0}
+.scoreboard{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:700px){.scoreboard{grid-template-columns:repeat(2,1fr)}}
+.metric{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:16px}
+.metric span{display:block;color:var(--muted);font-size:12px}
+.metric strong{display:block;margin-top:4px;font-size:24px;letter-spacing:-.02em}
+.metric small{color:var(--muted);font-size:11.5px}
+.verdict{border-radius:var(--radius);padding:22px 24px;border:1px solid var(--line);box-shadow:var(--shadow)}
+.verdict.good{background:var(--blue-deep);color:#fff}
+.verdict.tight{background:var(--orange-soft);color:var(--ink);border-color:var(--orange)}
+.verdict.bad{background:#fbecec;color:var(--ink);border-color:var(--negative)}
+@media (prefers-color-scheme:dark){.verdict.bad{background:#3a1d1d}}
+.verdict h2{margin:0 0 6px;font-size:26px;letter-spacing:-.02em}
+.verdict.good h2{color:#fff}
+.verdict p{margin:0 0 8px;font-size:15px}
+.verdict p:last-child{margin-bottom:0}
+.verdict .window{font-size:20px;font-weight:700}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px}
+.card h2{margin:0 0 4px;font-size:19px;letter-spacing:-.015em}
+.card h3{margin:0 0 10px;font-size:16px}
+.card>p{color:var(--muted);font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted);font:600 11px "IBM Plex Mono",ui-monospace,monospace;letter-spacing:.05em;text-transform:uppercase}
+td strong{font-size:14px}
+.formula{font:500 13px "IBM Plex Mono",ui-monospace,monospace;color:var(--muted);background:var(--surface-2);border-radius:8px;padding:12px 14px;margin:14px 0 0;line-height:1.7}
+.formula b{color:var(--ink)}
+.method{color:var(--muted);font-size:12.5px;margin:14px 0 0}
+.method strong{color:var(--ink)}
+.levers li{margin:7px 0;font-size:14.5px}
+.levers li strong{color:var(--blue-deep)}
+.next-step{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.next-step a.cta{display:inline-block;background:var(--orange);color:#fff;text-decoration:none;font-weight:600;border-radius:8px;padding:12px 18px}
+.next-step a.cta:hover{filter:brightness(1.07)}
+.next-step p{margin:0;color:var(--muted);font-size:13px;max-width:520px}
+.services-line{font-size:13.5px;color:var(--muted)}
+.verdict-services{border-top:1px solid var(--line);margin-top:18px;padding-top:18px}
+.verdict-services-kicker{margin:0 0 6px;color:var(--orange);font:600 11px "IBM Plex Mono",ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase}
+.verdict-services h3{margin:0 0 8px;font-size:18px}
+.verdict-services p{margin:0 0 10px;font-size:14px;color:var(--muted)}
+.verdict-services ul{margin:0 0 12px;padding-left:20px;font-size:14.5px}
+.verdict-services li{margin:6px 0}
+.verdict-services-note{font-size:12.5px}
+a.verdict-services-cta{display:inline-block;background:var(--blue-deep);color:#fff;text-decoration:none;font-weight:600;border-radius:8px;padding:11px 16px}
+.kit-inline{border-top:1px solid var(--line);margin-top:18px;padding-top:18px}
+.kit-inline label{display:block;font-weight:600;margin-bottom:6px}
+.kit-inline p{margin:0 0 10px;color:var(--muted);font-size:13.5px}
+.kit-inline input[type=email]{width:100%;min-height:44px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);padding:9px 12px;outline:none}
+.kit-inline input[type=email]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(8,126,174,.17)}
+.sample-gate-button{appearance:none;border:0;background:var(--orange);color:#fff;font-weight:600;border-radius:8px;padding:12px 18px;cursor:pointer;margin-top:10px}
+.kit-status{color:var(--muted);font-size:12.5px;margin-top:8px}
+.faq details{border-top:1px solid var(--line);padding:14px 0}
+.faq details:first-of-type{border-top:0}
+.faq summary{cursor:pointer;font-weight:600;font-size:15px}
+.faq p{color:var(--muted);font-size:14px;margin:8px 0 0}
+.sources-block{font-size:13px;color:var(--muted)}
+.sources-block summary{cursor:pointer;font-weight:600;color:var(--ink)}
+.sources-block p{margin:10px 0}
+.disclaimer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+footer{width:min(1240px,calc(100% - 32px));margin:0 auto;padding:0 0 32px;color:var(--muted);font-size:12px}
+.compare-wrap{overflow-x:auto}
+.compare-wrap table{min-width:640px}
+.pill{display:inline-block;font:600 11px "IBM Plex Mono",ui-monospace,monospace;border-radius:999px;padding:3px 9px}
+.pill.ok{background:#e2f3ee;color:var(--positive)}
+.pill.no{background:#fbecec;color:var(--negative)}
+@media (prefers-color-scheme:dark){.pill.ok{background:#123f35}.pill.no{background:#3a1d1d}}
+</style>
+</head>
+<body>
+<main class="shell">
+  <span class="kicker">PARALLEL SPACE · FREE TOOL</span>
+  <h1>What Business Can I Afford?</h1>
+  <p class="lede">Enter the cash you can put down and the income you need to live on. Pick an industry. We show you the biggest business your cash can buy — and the smallest deal that still pays you after the loan. If the smallest is bigger than the biggest, that industry does not work on these terms yet.</p>
+  <p class="intro-note"><strong>Start with your money, not with a listing.</strong> Most buyers fall in love with a business first and check the loan second. This runs it the other way round, using the same researched SDE multiples and loan terms as the main acquisition calculator.</p>
+
+  <div class="workspace">
+    <aside class="panel inputs" aria-label="Your numbers">
+      <div class="panel-head"><h2>Your numbers</h2><p>Changes update the answer live.</p></div>
+      <div class="input-scroll">
+        <div class="input-group">
+          <h3>Your money</h3>
+          <div class="field"><label for="downCash">Cash you can put down</label><div class="input-wrap"><input id="downCash" type="number" min="0" step="5000" value="100000" inputmode="numeric" /><span class="unit">$</span></div></div>
+          <p class="group-note">Money for the down payment itself. Closing costs and a cash buffer are added separately below, so the total cash you need will be higher than this number.</p>
+          <div class="field"><label for="incomeNeed">Income you need per year</label><div class="input-wrap"><input id="incomeNeed" type="number" min="0" step="5000" value="150000" inputmode="numeric" /><span class="unit">$</span></div></div>
+          <p class="group-note">The pay you need to take home from the business each year, after the loan is paid. Think salary replacement, not revenue.</p>
+        </div>
+        <div class="input-group">
+          <h3>Industry</h3>
+          <div class="field-stack">
+            <label for="industrySelect">What kind of business?</label>
+            <select class="industry-select" id="industrySelect"></select>
+          </div>
+          <p class="preset-note" id="presetNote"></p>
+        </div>
+        <div class="input-group">
+          <h3>Loan terms</h3>
+          <p class="group-note">SBA 7(a) defaults. The down payment here is the SBA minimum — 10% total, at least 5% from your own funds.</p>
+          <div class="field"><label for="loanRate">Interest rate</label><div class="input-wrap"><input id="loanRate" type="number" min="0" max="30" step="0.25" value="10" inputmode="decimal" /><span class="unit">%</span></div></div>
+          <div class="field"><label for="loanTerm">Loan term</label><div class="input-wrap"><input id="loanTerm" type="number" min="1" max="30" step="1" value="10" inputmode="numeric" /><span class="unit">yrs</span></div></div>
+          <div class="field"><label for="downPct">Down payment</label><div class="input-wrap"><input id="downPct" type="number" min="5" max="100" step="1" value="10" inputmode="numeric" /><span class="unit">%</span></div></div>
+          <div class="field"><label for="dscrFloor">Lender DSCR test</label><div class="input-wrap"><input id="dscrFloor" type="number" min="1" max="2" step="0.05" value="1.25" inputmode="decimal" /><span class="unit">x</span></div></div>
+          <p class="group-note">DSCR is the lender's coverage test: business earnings divided by the annual loan payment. SBA lenders look for 1.25x. Self-storage is the exception — it is normally bought with long-term property debt, not a 10-year SBA loan, so it fails this test on purpose. See the note under the verdict.</p>
+        </div>
+        <div class="input-group">
+          <h3>Cash on top</h3>
+          <div class="field"><label for="wcBuffer">Working-capital buffer</label><div class="input-wrap"><input id="wcBuffer" type="number" min="0" step="5000" value="25000" inputmode="numeric" /><span class="unit">$</span></div></div>
+          <p class="group-note">Cash to keep in the business after closing — for payroll, suppliers, and the first slow month. Closing costs are 2% of the price on top of this (legal and diligence typically run 1–4%).</p>
+        </div>
+      </div>
+    </aside>
+
+    <section class="results" aria-label="Affordability results">
+      <div class="scoreboard" aria-live="polite">
+        <div class="metric"><span>Biggest price your cash allows</span><strong id="mMaxPrice">—</strong><small>down payment ÷ down %</small></div>
+        <div class="metric"><span>Smallest price that pays you</span><strong id="mMinPrice">—</strong><small>income need ÷ cash left per $1</small></div>
+        <div class="metric"><span>Cash left per year at max price</span><strong id="mLeftover">—</strong><small>after the loan is paid</small></div>
+        <div class="metric"><span>DSCR at any price</span><strong id="mDscr">—</strong><small>lender test, needs 1.25x</small></div>
+      </div>
+
+      <div class="verdict" id="verdictBox" role="status">
+        <h2 id="verdictTitle">—</h2>
+        <p class="window" id="verdictWindow"></p>
+        <p id="verdictBody"></p>
+        <p id="verdictNote"></p>
+      </div>
+
+      <div class="card">
+        <h2>At the biggest price your cash allows</h2>
+        <p>What that deal looks like, using this industry's researched averages.</p>
+        <table>
+          <thead><tr><th>Line</th><th>Amount</th></tr></thead>
+          <tbody id="maxTable"></tbody>
+        </table>
+        <div class="formula" id="formulaBox"></div>
+        <p class="method"><strong>Why DSCR does not change with price:</strong> a bigger business in the same industry earns proportionally more, so earnings and loan payment grow together. What changes with price is the cash you need to close and the cash you keep each year — that is why the answer is a window, not a single number.</p>
+      </div>
+
+      <div class="card">
+        <h2>At the smallest price that pays you</h2>
+        <p>The cheapest deal in this industry that still leaves you your income after the loan.</p>
+        <table>
+          <thead><tr><th>Line</th><th>Amount</th></tr></thead>
+          <tbody id="minTable"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>What would change the answer?</h2>
+        <ul class="levers" id="leversList"></ul>
+      </div>
+
+      <div class="card next-step">
+        <div>
+          <h2>Found your range? Price a specific deal.</h2>
+          <p>Take the price into the full acquisition calculator — five-year P&amp;L, cash flow, working capital, and both DSCRs — with this industry already selected.</p>
+        </div>
+        <a class="cta" id="priceDealLink" href="https://acquisition-calculator.pages.dev" target="_blank" rel="noopener noreferrer">Price a specific deal →</a>
+      </div>
+
+      <div class="card">
+        <h2>Every industry, on your numbers</h2>
+        <p>Same cash, same income need, same loan. Sorted by the smallest price that pays you. A lower multiple or a fatter margin means a smaller deal can pay you.</p>
+        <div class="compare-wrap"><table>
+          <thead><tr><th>Industry</th><th>Price multiple</th><th>SDE margin</th><th>Smallest price that pays you</th><th>DSCR</th><th>Fits your cash?</th></tr></thead>
+          <tbody id="compareTable"></tbody>
+        </table></div>
+        <p class="method">Multiples and margins are the researched defaults from the main calculator. Self-storage is priced on a 6.5% cap rate, not a multiple — see the sources below.</p>
+      </div>
+
+      <div class="card">
+        <div class="verdict-services">
+          <p class="verdict-services-kicker">Built for your deal, not just the model</p>
+          <h3>Want this run on your actual numbers?</h3>
+          <p>This calculator uses industry averages. Your deal has its own earnings, its own lender, and its own diligence questions — David runs those by hand.</p>
+          <ul>
+            <li><strong>Model Build — $1,500</strong> · a full acquisition model built for your deal</li>
+            <li><strong>Valuation — $950</strong> · an independent read on what the business is worth</li>
+            <li><strong>FP&amp;A Advisory — $125/hr</strong> · diligence, cash flow, and lender questions, answered</li>
+          </ul>
+          <a class="verdict-services-cta" href="https://contra.com/david_hu_o9deripy" target="_blank" rel="noopener noreferrer">See services on Contra</a>
+          <p class="verdict-services-note">Built by David Hu, Director of Finance &amp; Accounting, MBA — 15+ years in manufacturing and logistics finance.</p>
+        </div>
+        <!-- TODO (Kit): create a NEW Kit form named "Email me my affordability" and replace 10186063 in the action URL below with its numeric form ID. Then set up a Kit automation on that form that emails the subscriber their affordability summary using the captured custom fields (affordability_industry, max_price, min_price, income_needed, dscr, monthly_payment, verdict). Do NOT reuse form 10123322 (Suggest a business), 10123459 (Quick Screen), or the "Email me this deal" form. Until the form ID is replaced, this form will not deliver anything. -->
+        <form class="kit-inline" id="emailAffordForm" action="https://app.kit.com/forms/10186063/subscriptions" method="post" target="kitSubmitFrame">
+          <label for="emailAffordAddress">Email me my affordability</label>
+          <p>Get your price window, DSCR, and monthly payment in your inbox — so you have the numbers when you talk to a seller or your lender.</p>
+          <input id="emailAffordAddress" name="email_address" type="email" maxlength="120" autocomplete="email" required placeholder="Email address" />
+          <input type="hidden" name="fields[affordability_industry]" id="emailAffordIndustry" value="" />
+          <input type="hidden" name="fields[max_price]" id="emailAffordMaxPrice" value="" />
+          <input type="hidden" name="fields[min_price]" id="emailAffordMinPrice" value="" />
+          <input type="hidden" name="fields[income_needed]" id="emailAffordIncome" value="" />
+          <input type="hidden" name="fields[dscr]" id="emailAffordDscr" value="" />
+          <input type="hidden" name="fields[monthly_payment]" id="emailAffordMonthly" value="" />
+          <input type="hidden" name="fields[verdict]" id="emailAffordVerdict" value="" />
+          <button class="sample-gate-button" type="submit">Email me my affordability</button>
+          <p class="kit-status" id="emailAffordStatus" aria-live="polite"></p>
+        </form>
+        <iframe name="kitSubmitFrame" style="display:none" title="Form submission"></iframe>
+      </div>
+
+      <div class="card faq">
+        <h2>Questions buyers actually ask</h2>
+        <details><summary>How much business can I buy with $100,000 down?</summary><p>With a 10% SBA down payment, $100,000 down caps the price at $1,000,000. But the price also has to leave you enough after loan payments. For a $150,000 income need at 10% over 10 years, the smallest deal that pays you is about $624,000 for home services and about $950,000 for HVAC. This page shows both ends of that window for every industry.</p></details>
+        <details><summary>What DSCR do SBA lenders want?</summary><p>1.25x. The business's SDE must be at least 1.25 times the annual loan payment. Under SOP 50 10 8.1 the test runs on historical earnings, so a forward-looking estimate is a benchmark to compare against, not a pass/fail verdict. A quality-of-earnings report is mandatory for purchase prices of $3M or more.</p></details>
+        <details><summary>Why does the same down payment buy a bigger restaurant than a car wash?</summary><p>Price is a multiple of SDE, and multiples differ by industry. A restaurant sells at about 2.15x SDE, a car wash at about 4.5x SDE. One dollar of earnings buys more restaurant than car wash — but the restaurant also earns a thinner margin, so the loan payment eats more of it. The comparison table below shows the trade-off for all 19 industries.</p></details>
+        <details><summary>Is this lender approval?</summary><p>No. This is an estimate from researched industry averages, not a lender decision. Real approval depends on the actual business's tax returns, your credit, the lender's underwriting, and a quality-of-earnings review where required. Verify every number with your lender before you make an offer.</p></details>
+      </div>
+
+      <details class="card sources-block">
+        <summary>Where the numbers come from</summary>
+        <p><strong>Industry multiples and margins</strong> — the same researched defaults as the main acquisition calculator (fetched from the live repo, Nov 12, 2026): revenue, EBITDA margin, and SDE multiple per preset. SDE margin is EBITDA margin with the owner's pay already inside it, except general contractor, where SDE runs ~23% of revenue including owner comp while EBITDA alone is 8% (BizBuySell). Self-storage is priced on NOI at a 6.5% cap rate (sector avg 6.59%), not a multiple.</p>
+        <p><strong>Loan rate 10%</strong> — SBA 7(a) typical: prime 7.00% + 3.0% max spread for loans over $350K (Fed H.15 / SBA, Oct 2026). Re-check after the Dec 8–9 FOMC meeting.</p>
+        <p><strong>DSCR 1.25x</strong> — SBA 7(a) test under SOP 50 10 8.1, effective Oct 1, 2026.</p>
+        <p><strong>Down payment 10%</strong> — SBA 7(a) minimum (5% from your own funds); 15% is a typical buyer contribution.</p>
+        <p><strong>Closing costs 2%</strong> — typical deal costs run 1–4% of price before financing fees (legal + diligence 1–3%).</p>
+        <p class="disclaimer"><strong>Disclaimer:</strong> This free calculator is an educational planning tool, not investment, accounting, tax, or lending advice. It uses industry averages, not any specific business's financials. Validate assumptions and deal terms with qualified advisers and your lender before relying on the output.</p>
+      </details>
+    </section>
+  </div>
+</main>
+<footer><p>© 2026 Parallel Space. All rights reserved. The models, presets, and research on this page are the original work of David Hu and may not be copied or reproduced. · <a href="https://acquisition-calculator.pages.dev" target="_blank" rel="noopener noreferrer">Main acquisition calculator</a></p></footer>
+
+<script>
+(function () {
+  "use strict";
+  /* Presets reused from the live main calculator (fetched Nov 12, 2026 from
+     raw.githubusercontent.com/dhu003/parallel-space-sites/main/acquisition-calculator/index.html).
+     SDE margin = EBITDA margin from the live finance block (100 - variableCost - labor - opex),
+     with the live common defaults (variable 15 / labor 22 / opex 28) filling gaps.
+     Exceptions, exactly as the live calculator notes them:
+       - general-contractor: SDE ~23% of revenue incl. owner comp (EBITDA alone is 8%).
+       - general-business: unit economics, $2.5M revenue, 24% EBITDA, priced at 4.0x SDE
+         (the live calculator's fallback: max(EBITDA x 4, revenue x 0.6)).
+       - self-storage: priced on NOI at a 6.5% cap rate, not a multiple; NOI is 65% of revenue.
+     typicalRev = Year-1 revenue at the live preset's default drivers. */
+  var PRESETS = [
+    {slug:"home-services", name:"Home services", mult:2.61, sdeMargin:0.19, typicalRev:1870000, note:"Typical mixed-trade company: 17–21% EBITDA, this default 19% — $1.87M revenue, $355,300 EBITDA. Price: 2.61x SDE (BizBuySell sold avg)."},
+    {slug:"hvac", name:"HVAC contractor", mult:2.83, sdeMargin:0.17, typicalRev:4290000, note:"Typical: 8–14% EBITDA (small shop), 14–20% mixed; this default 17%. Price: 2.83x SDE (BizBuySell sold avg). About a $2.06M price at default size."},
+    {slug:"car-wash", name:"Car wash", mult:4.5, sdeMargin:0.35, typicalRev:1166400, note:"Typical mature express site: $1.5–3.0M revenue, 35–50% four-wall EBITDA (MMCG 2026). Price: 4.5x SDE."},
+    {slug:"auto-repair", name:"Auto repair shop", mult:2.85, sdeMargin:0.20, typicalRev:1881000, note:"Typical shop: $750K–1.5M revenue, 15–25% net margin. Price: 2.85x SDE (BizBuySell sold avg)."},
+    {slug:"auto-parts", name:"Auto parts store", mult:3.0, sdeMargin:0.13, typicalRev:1760000, note:"Typical gross margin 40–45%. Price: 3.0x SDE."},
+    {slug:"self-storage", name:"Self-storage", mult:null, capRate:0.065, sdeMargin:0.65, typicalRev:796320, note:"Priced on NOI at a 6.5% cap rate (sector avg 6.59%), not a multiple. NOI is 65% of revenue — and it is normally bought with long-term property debt, not a 10-year SBA loan."},
+    {slug:"dental-clinic", name:"Dental clinic", mult:2.63, sdeMargin:0.28, typicalRev:964440, note:"Typical practice: 15–25% EBITDA; this default a larger healthy practice at 28% EBITDA. Price: 2.63x SDE (BizBuySell sold avg)."},
+    {slug:"veterinary-clinic", name:"Veterinary clinic", mult:4.5, sdeMargin:0.24, typicalRev:2538200, note:"Typical clinic: 18–24% EBITDA; this default a healthy 4-doctor hospital at 24% EBITDA. Price: 4.5x SDE."},
+    {slug:"craft-brewery", name:"Craft brewery", mult:3.7, sdeMargin:0.22, typicalRev:2218230, note:"Typical: 21–33% EBITDA at a taproom/distribution blend; this default 22%. Price: 3.7x SDE."},
+    {slug:"laundromat", name:"Laundromat", mult:3.65, sdeMargin:0.28, typicalRev:442485, note:"Typical sold store: about $220K revenue, 20–25% EBITDA; this default a large modern store at 28% EBITDA. Price: 3.65x SDE."},
+    {slug:"trucking-logistics", name:"Trucking & Logistics", mult:3.0, sdeMargin:0.23, typicalRev:3519000, note:"Typical sold carrier: about $1.95M revenue, 20.5% SDE margin; this default a 12-truck carrier at 23% EBITDA. Price: 3.0x SDE (BizBuySell sold avg). Cost split per ATRI 2025."},
+    {slug:"3pl-warehousing", name:"3PL & Warehousing", mult:3.0, sdeMargin:0.15, typicalRev:4393080, note:"Typical 3PL: 5–15% EBITDA (up to about 18% tech-enabled); this default 15%. Price: 3.0x SDE."},
+    {slug:"restaurant", name:"Restaurant", mult:2.15, sdeMargin:0.13, typicalRev:900000, note:"Typical sold restaurant: about $718K revenue, 10–20% EBITDA. Price: 2.15x SDE (BizBuySell sold avg)."},
+    {slug:"boba-milk-tea", name:"Boba & Milk Tea Shop", mult:2.5, sdeMargin:0.20, typicalRev:420000, note:"Typical single shop: $250K–450K revenue, 10–25% net margin; this default 20% EBITDA. Price: 2.5x SDE."},
+    {slug:"ecommerce", name:"E-commerce Brand", mult:3.32, sdeMargin:0.18, typicalRev:1752000, note:"Typical FBA brand: 15–25% net margin; sold median about $1.0M revenue; this default 18% EBITDA. Price: 3.32x SDE (BizBuySell sold avg)."},
+    {slug:"roofing", name:"Roofing company", mult:2.1, sdeMargin:0.16, typicalRev:2940000, note:"Typical residential replacement: 10–16% EBITDA; this default 16%. Price: 2.1x SDE."},
+    {slug:"general-contractor", name:"General contractor", mult:2.56, sdeMargin:0.23, typicalRev:2100000, note:"Typical small GC: $2.1M revenue, 8% EBITDA — but SDE runs ~23% of revenue including the owner's pay, and the 2.56x price is on SDE. Price: 2.56x SDE (BizBuySell 2025, 408 construction sales)."},
+    {slug:"home-health", name:"Home health care agency", mult:3.0, sdeMargin:0.20, typicalRev:1164800, note:"Typical small agency (non-medical, private-pay): ~$1.1M revenue, 20% EBITDA, sells at ~3.0x SDE (BizBuySell sold median $700K)."},
+    {slug:"general-business", name:"General business", mult:4.0, sdeMargin:0.24, typicalRev:2500000, note:"Build from your own unit economics. Default: $2.5M revenue, 24% EBITDA. Priced at 4.0x SDE (the main calculator's fallback)."}
+  ];
+  var CLOSING_PCT = 0.02; /* closing costs, 2% of price */
+  var MAIN_CALC = "https://acquisition-calculator.pages.dev";
+
+  function money(n) {
+    if (!isFinite(n)) return "—";
+    var sign = n < 0 ? "−" : "", a = Math.abs(n);
+    if (a >= 1000000) return sign + "$" + (a / 1000000).toFixed(a >= 10000000 ? 1 : 2) + "M";
+    if (a >= 1000) return sign + "$" + Math.round(a / 1000).toLocaleString("en-US") + "K";
+    return sign + "$" + Math.round(a).toLocaleString("en-US");
+  }
+  function fullMoney(n) {
+    if (!isFinite(n)) return "—";
+    return (n < 0 ? "−" : "") + "$" + Math.round(Math.abs(n)).toLocaleString("en-US");
+  }
+  /* Annual loan payment per $1 borrowed. Standard amortisation. */
+  function annualFactor(ratePct, years) {
+    var y = Math.max(1, years || 10);
+    if (!ratePct || ratePct <= 0) return 1 / y;
+    var r = ratePct / 100 / 12, n = y * 12;
+    return 12 * r / (1 - Math.pow(1 + r, -n));
+  }
+  function sdePerDollar(p) { return p.capRate ? p.capRate : 1 / p.mult; }
+  function priceLabel(p) { return p.capRate ? ("NOI / " + (p.capRate * 100).toFixed(1) + "% cap rate") : (p.mult.toFixed(2) + "x SDE"); }
+
+  /* Core math. SDE = seller's discretionary earnings: cash the business throws off
+     in a year before loan payments. Price = SDE x multiple (or SDE / cap rate).
+     DSCR = SDE / annual debt service. Because both SDE and debt service scale with
+     price, DSCR is the same at every price for a given preset and loan — the window
+     between min and max price is what the income need and the down payment decide. */
+  function computeAffordability(p, inp) {
+    var downPct = Math.min(100, Math.max(0, inp.downPct)) / 100;
+    var af = annualFactor(inp.rate, inp.term);
+    var sdeD = sdePerDollar(p);
+    var dsD = (1 - downPct) * af;
+    var leftD = sdeD - dsD;
+    var dscr = dsD > 0 ? sdeD / dsD : Infinity;
+    var maxPrice = downPct > 0 ? inp.downCash / downPct : 0;
+    var minPrice = null;
+    if (leftD > 0 && inp.incomeNeed > 0) minPrice = inp.incomeNeed / leftD;
+    if (inp.incomeNeed <= 0) minPrice = 0;
+    function atPrice(price) {
+      var sde = price * sdeD;
+      var loan = price * (1 - downPct);
+      var monthly = loan * af / 12;
+      var annualDS = monthly * 12;
+      return {
+        price: price, sde: sde, revenue: p.sdeMargin > 0 ? sde / p.sdeMargin : 0,
+        loan: loan, monthly: monthly, annualDS: annualDS,
+        leftover: sde - annualDS, down: price * downPct,
+        cashToClose: price * downPct + price * CLOSING_PCT + (inp.wcBuffer || 0),
+        dscr: dscr
+      };
+    }
+    var atMax = atPrice(maxPrice);
+    var atMin = minPrice !== null ? atPrice(minPrice) : null;
+    var verdict = "bad", title = "", body = "", note = ""; /* verdict is set per branch below */
+    if (leftD <= 0) {
+      title = "Not affordable on these terms";
+      body = "In this industry, at this multiple and loan cost, the loan payment eats all of the earnings — a bigger deal makes it worse, not better. Every $1 of price produces " + money(sdeD) + " of SDE but costs " + money(dsD) + " a year in loan payments.";
+      note = "This is a loan-structure problem, not a size problem. See what would change it below.";
+    } else if (dscr < inp.dscrFloor) {
+      title = "Not affordable — the lender test fails";
+      body = "DSCR is " + dscr.toFixed(2) + "x, below the " + inp.dscrFloor.toFixed(2) + "x lenders look for. The test fails at every price in this industry on these terms, because earnings and loan payments grow together.";
+      note = "A lower rate, a longer term, or a lower-priced multiple is what moves DSCR — not a bigger or smaller deal.";
+    } else if (minPrice === null) {
+      title = "Enter your numbers";
+      body = "Add the cash you can put down and the income you need to see your price window.";
+      note = "";
+    } else if (minPrice > maxPrice) {
+      var short = minPrice * downPct - inp.downCash;
+      title = "Not affordable yet — the gap is " + money(short) + " more down";
+      body = "The smallest " + p.name.toLowerCase() + " deal that pays you " + fullMoney(inp.incomeNeed) + " a year costs " + fullMoney(minPrice) + ", which needs " + fullMoney(minPrice * downPct) + " down. Your cash caps you at " + fullMoney(maxPrice) + ".";
+      note = "You are " + fullMoney(short) + " of down payment short — or the income need, the rate, or the industry has to move. See below.";
+    } else if (minPrice >= 0.8 * maxPrice) {
+      verdict = "tight";
+      title = "Tight — you can afford it, barely";
+      body = "Your window is " + fullMoney(minPrice) + " to " + fullMoney(maxPrice) + ". That works, but there is little room for a bad year, a higher rate, or earnings below average. Diligence matters more, not less, on a tight deal.";
+      note = "DSCR is " + dscr.toFixed(2) + "x, above the " + inp.dscrFloor.toFixed(2) + "x test — the tightness is the size of the window, not the lender test.";
+    } else {
+      verdict = "good";
+      title = "Affordable — your window is " + fullMoney(minPrice) + " to " + fullMoney(maxPrice);
+      body = "A " + p.name.toLowerCase() + " deal in that range leaves you at least " + fullMoney(inp.incomeNeed) + " a year after the loan, and DSCR is " + dscr.toFixed(2) + "x against the " + inp.dscrFloor.toFixed(2) + "x lender test. Bigger in the window means more income — up to " + fullMoney(atMax.leftover) + " a year at the top.";
+      note = "Averages got you here; a real deal is priced on its own tax returns. Price a specific one below before you trust the window.";
+    }
+    return {
+      preset: p, maxPrice: maxPrice, minPrice: minPrice, sdePerDollar: sdeD,
+      dsPerDollar: dsD, leftoverPerDollar: leftD, dscr: dscr, annualFactor: af,
+      atMax: atMax, atMin: atMin, verdict: verdict, title: title, body: body, note: note
+    };
+  }
+
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = { PRESETS: PRESETS, computeAffordability: computeAffordability, annualFactor: annualFactor, money: money };
+  }
+
+  if (typeof document === "undefined") return;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var select = $("industrySelect");
+  PRESETS.forEach(function (p) {
+    var o = document.createElement("option");
+    o.value = p.slug; o.textContent = p.name;
+    select.appendChild(o);
+  });
+  select.value = "home-services";
+
+  function num(id, fallback) {
+    var v = parseFloat($(id).value);
+    return isFinite(v) ? v : fallback;
+  }
+  function row(label, value) { return "<tr><td>" + label + "</td><td><strong>" + value + "</strong></td></tr>"; }
+
+  function render() {
+    var slug = select.value;
+    var p = PRESETS.filter(function (x) { return x.slug === slug; })[0] || PRESETS[0];
+    var inp = {
+      downCash: Math.max(0, num("downCash", 100000)),
+      incomeNeed: Math.max(0, num("incomeNeed", 150000)),
+      rate: Math.max(0, num("loanRate", 10)),
+      term: Math.max(1, num("loanTerm", 10)),
+      downPct: Math.min(100, Math.max(1, num("downPct", 10))),
+      dscrFloor: Math.max(1, num("dscrFloor", 1.25)),
+      wcBuffer: Math.max(0, num("wcBuffer", 25000))
+    };
+    var r = computeAffordability(p, inp);
+    $("presetNote").innerHTML = "<strong>" + p.name + ":</strong> " + p.note +
+      " Typical size at default drivers: " + fullMoney(p.typicalRev) + " revenue, " + fullMoney(p.typicalRev * p.sdeMargin) + " SDE.";
+    $("mMaxPrice").textContent = money(r.maxPrice);
+    $("mMinPrice").textContent = r.minPrice === null ? "—" : money(r.minPrice);
+    $("mLeftover").textContent = money(r.atMax.leftover);
+    $("mDscr").textContent = isFinite(r.dscr) ? r.dscr.toFixed(2) + "x" : "—";
+
+    var box = $("verdictBox");
+    var cls = r.verdict; /* good / tight / bad, set by computeAffordability */
+    if (r.minPrice !== null && r.leftoverPerDollar > 0 && r.dscr >= inp.dscrFloor && r.minPrice <= r.maxPrice) cls = (r.minPrice >= 0.8 * r.maxPrice) ? "tight" : "good";
+    box.className = "verdict " + cls;
+    $("verdictTitle").textContent = r.title;
+    $("verdictWindow").textContent = (r.minPrice !== null && r.leftoverPerDollar > 0)
+      ? ("Window: " + fullMoney(r.minPrice) + " – " + fullMoney(r.maxPrice)) : "";
+    $("verdictBody").textContent = r.body;
+    $("verdictNote").textContent = r.note;
+
+    var a = r.atMax;
+    $("maxTable").innerHTML =
+      row("Purchase price", fullMoney(a.price)) +
+      row("Implied revenue (SDE ÷ " + Math.round(p.sdeMargin * 100) + "% margin)", fullMoney(a.revenue)) +
+      row("SDE — cash the business throws off / yr (" + priceLabel(p) + ")", fullMoney(a.sde)) +
+      row("Loan (" + Math.round((1 - inp.downPct / 100) * 100) + "% of price)", fullMoney(a.loan)) +
+      row("Monthly loan payment (" + inp.rate + "% / " + inp.term + " yrs)", fullMoney(a.monthly)) +
+      row("Annual loan payment", fullMoney(a.annualDS)) +
+      row("Cash left for you per year", fullMoney(a.leftover)) +
+      row("DSCR (SDE ÷ annual payment)", isFinite(a.dscr) ? a.dscr.toFixed(2) + "x" : "—") +
+      row("Cash to close (down + 2% closing + buffer)", fullMoney(a.cashToClose));
+    $("formulaBox").innerHTML =
+      "<b>How the window is built</b><br>" +
+      "SDE per $1 of price = " + (p.capRate ? "cap rate " + (p.capRate * 100).toFixed(1) + "%" : "1 ÷ " + p.mult.toFixed(2) + " multiple") + " = " + money(r.sdePerDollar) + "<br>" +
+      "Loan payment per $1 of price = " + (100 - inp.downPct) + "% loan × " + inp.rate + "% / " + inp.term + " yrs = " + money(r.dsPerDollar) + " / yr<br>" +
+      "Cash left per $1 of price = " + money(r.sdePerDollar) + " − " + money(r.dsPerDollar) + " = " + money(r.leftoverPerDollar) + " / yr<br>" +
+      "Smallest price that pays you = " + fullMoney(inp.incomeNeed) + " ÷ " + money(r.leftoverPerDollar) + (r.minPrice === null ? " = —" : " = " + fullMoney(r.minPrice)) + "<br>" +
+      "Biggest price your cash allows = " + fullMoney(inp.downCash) + " ÷ " + inp.downPct + "% = " + fullMoney(r.maxPrice);
+
+    var m = r.atMin;
+    $("minTable").innerHTML = m ? (
+      row("Purchase price", fullMoney(m.price)) +
+      row("Implied revenue", fullMoney(m.revenue)) +
+      row("SDE per year", fullMoney(m.sde)) +
+      row("Monthly loan payment", fullMoney(m.monthly)) +
+      row("Annual loan payment", fullMoney(m.annualDS)) +
+      row("Cash left for you per year", fullMoney(m.leftover)) +
+      row("Down payment needed", fullMoney(m.down)) +
+      row("Cash to close (down + 2% closing + buffer)", fullMoney(m.cashToClose))
+    ) : "<tr><td>No price in this industry leaves enough after the loan on these terms.</td><td></td></tr>";
+
+    /* Levers: what would change it */
+    var levers = [];
+    if (r.minPrice !== null && r.leftoverPerDollar > 0) {
+      var need = r.minPrice * (inp.downPct / 100) - inp.downCash;
+      if (need > 0) levers.push("<strong>More down:</strong> put down " + fullMoney(need) + " more (" + fullMoney(r.minPrice * (inp.downPct / 100)) + " total) and the smallest deal that pays you is in reach.");
+      else levers.push("<strong>More down:</strong> you already cover the down payment on the smallest deal that pays you — extra cash buys a bigger deal, up to " + fullMoney(r.maxPrice) + ".");
+      levers.push("<strong>Less income need:</strong> at your biggest price (" + fullMoney(r.maxPrice) + ") the business leaves you " + fullMoney(r.atMax.leftover) + " a year — that is the most this cash buys in this industry.");
+      var r15 = computeAffordability(p, { downCash: inp.downCash, incomeNeed: inp.incomeNeed, rate: inp.rate, term: 15, downPct: inp.downPct, dscrFloor: inp.dscrFloor, wcBuffer: inp.wcBuffer });
+      if (r15.minPrice !== null) levers.push("<strong>Longer term:</strong> stretching the loan to 15 years cuts the payment at max price to " + fullMoney(r15.atMax.monthly) + " a month, DSCR rises to " + r15.dscr.toFixed(2) + "x, and the smallest deal that pays you drops to " + fullMoney(r15.minPrice) + ".");
+      var r9 = computeAffordability(p, { downCash: inp.downCash, incomeNeed: inp.incomeNeed, rate: Math.max(0, inp.rate - 1), term: inp.term, downPct: inp.downPct, dscrFloor: inp.dscrFloor, wcBuffer: inp.wcBuffer });
+      if (r9.minPrice !== null) levers.push("<strong>Lower rate:</strong> at " + Math.max(0, inp.rate - 1).toFixed(2).replace(/\.00$/, "") + "% instead of " + inp.rate + "%, the smallest deal that pays you drops to " + fullMoney(r9.minPrice) + ".");
+    }
+    if (p.slug === "self-storage" && r.leftoverPerDollar <= 0) {
+      levers.push("<strong>Different debt:</strong> self-storage is normally bought with 20–25 year property debt at a lower rate and 20–25% down — not a 10-year SBA loan. Try 7%, 25 years, and 25% down and check the window again.");
+    }
+    var best = null;
+    PRESETS.forEach(function (q) {
+      if (q.slug === p.slug) return;
+      var rq = computeAffordability(q, inp);
+      if (rq.minPrice !== null && rq.leftoverPerDollar > 0 && rq.dscr >= inp.dscrFloor && rq.minPrice <= rq.maxPrice) {
+        if (!best || rq.minPrice < best.minPrice) best = rq;
+      }
+    });
+    if (best) levers.push("<strong>Different industry:</strong> the smallest deal that pays you on the same cash is a " + best.preset.name.toLowerCase() + " at " + fullMoney(best.minPrice) + " (DSCR " + best.dscr.toFixed(2) + "x). Compare all 19 below.");
+    $("leversList").innerHTML = levers.map(function (l) { return "<li>" + l + "</li>"; }).join("") || "<li>Enter your numbers above to see what moves the answer.</li>";
+
+    /* Price-a-specific-deal link: live calculator reads the industry from the URL hash. */
+    $("priceDealLink").href = MAIN_CALC + "#" + p.slug;
+
+    /* Comparison table */
+    var rows = PRESETS.map(function (q) {
+      var rq = computeAffordability(q, inp);
+      var fits = rq.minPrice !== null && rq.leftoverPerDollar > 0 && rq.dscr >= inp.dscrFloor && rq.minPrice <= rq.maxPrice;
+      return { q: q, rq: rq, fits: fits };
+    }).sort(function (a, b) {
+      var av = a.rq.minPrice === null ? Infinity : a.rq.minPrice;
+      var bv = b.rq.minPrice === null ? Infinity : b.rq.minPrice;
+      return av - bv;
+    });
+    $("compareTable").innerHTML = rows.map(function (x) {
+      return "<tr><td>" + x.q.name + "</td><td>" + (x.q.capRate ? "cap " + (x.q.capRate * 100).toFixed(1) + "%" : x.q.mult.toFixed(2) + "x") + "</td><td>" + Math.round(x.q.sdeMargin * 100) + "%</td><td><strong>" + (x.rq.minPrice === null ? "— never pays" : fullMoney(x.rq.minPrice)) + "</strong></td><td>" + (isFinite(x.rq.dscr) ? x.rq.dscr.toFixed(2) + "x" : "—") + "</td><td><span class=\"pill " + (x.fits ? "ok" : "no") + "\">" + (x.fits ? "Fits" : "No") + "</span></td></tr>";
+    }).join("");
+
+    /* Email capture hidden fields */
+    $("emailAffordIndustry").value = p.name;
+    $("emailAffordMaxPrice").value = Math.round(r.maxPrice);
+    $("emailAffordMinPrice").value = r.minPrice === null ? "" : Math.round(r.minPrice);
+    $("emailAffordIncome").value = Math.round(inp.incomeNeed);
+    $("emailAffordDscr").value = isFinite(r.dscr) ? r.dscr.toFixed(2) : "";
+    $("emailAffordMonthly").value = Math.round(r.atMax.monthly);
+    $("emailAffordVerdict").value = r.title;
+  }
+
+  ["downCash", "incomeNeed", "industrySelect", "loanRate", "loanTerm", "downPct", "dscrFloor", "wcBuffer"].forEach(function (id) {
+    $(id).addEventListener("input", render);
+    $(id).addEventListener("change", render);
+  });
+  $("emailAffordForm").addEventListener("submit", function () {
+    $("emailAffordStatus").textContent = "Sending — check your inbox for your affordability summary.";
+  });
+  render();
+})();
+</script>
+</body>
+</html>
