@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Methodology — Parallel Space Calculators</title>
+<meta name="description" content="How the free Parallel Space calculators work: the 19 industry presets, their sources, the SBA rules applied, and the Deal Score method — with the caveats." />
+<style>
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1a1d21;background:#fff;line-height:1.6}
+  main{max-width:760px;margin:0 auto;padding:40px 20px 64px}
+  .kicker{font-size:12px;letter-spacing:.14em;font-weight:700;color:#5b6470}
+  h1{font-size:30px;line-height:1.2;margin:10px 0 4px}
+  .updated{color:#5b6470;font-size:13px;margin:0 0 28px}
+  h2{font-size:19px;margin:32px 0 8px}
+  p{margin:10px 0}
+  ul{margin:10px 0;padding-left:22px}
+  li{margin:6px 0}
+  a{color:#1a1d21}
+  footer{max-width:760px;margin:0 auto;padding:0 20px 32px;color:#5b6470;font-size:12px}
+  footer a{color:#5b6470}
+</style>
+</head>
+<body>
+<main>
+  <p class="kicker">PARALLEL SPACE · FREE TOOLS</p>
+  <h1>Methodology</h1>
+  <p class="updated">Last updated: November 21, 2026</p>
+
+  <p>This page is the working method behind the three free Parallel Space calculators: the Small Business Acquisition Calculator, the What Business Can I Afford? calculator, and the SBA Funding Finder. It states what the numbers are, where they came from, and what they are not. If a number here is wrong, or a source has moved, tell us and we will fix it.</p>
+
+  <h2>1. What the presets are</h2>
+  <p>Each of the 19 industries is a researched operating model: revenue drivers, operating ratios, a sale price, and working-capital terms. A preset is an average of businesses like the one you are looking at — not any specific business&rsquo;s financials. The first thing the tools ask you to do, in every preset&rsquo;s own note, is replace the averages with the business&rsquo;s actual collected revenue and actual expenses.</p>
+  <p>The presets are built the same way every time: drivers produce revenue (washes per day, trucks and miles, caregivers and billable hours), operating ratios produce EBITDA, seller&rsquo;s discretionary earnings (SDE) follow from EBITDA plus the owner&rsquo;s pay and add-backs, and a sale multiple on SDE produces the price. Each preset is then cross-checked against sold-transaction data. Where the cross-check and the model disagree, the disagreement is kept in the preset&rsquo;s note rather than hidden — the general contractor preset is the clearest case (see section 7).</p>
+
+  <h2>2. The 19 presets and their benchmarks</h2>
+  <p>These are the &ldquo;typical&rdquo; lines the calculator itself shows for each industry, word for word:</p>
+  <ul>
+      <li><strong>Car wash.</strong> Typical mature express site: $1.5-3.0M revenue, 35-50% four-wall EBITDA (MMCG 2026). This default is a solid single site, not a top performer. Price: 4.5x SDE.</li>
+      <li><strong>Auto repair shop.</strong> Typical shop: $750K-1.5M revenue, 15-25% net margin. This default is a large 6-tech shop. Price: 2.85x SDE (BizBuySell sold avg).</li>
+      <li><strong>Auto parts store.</strong> Typical gross margin 40-45%. Turns here are sales / inventory (COGS turns about 3.2x). Price: 3.0x SDE.</li>
+      <li><strong>Home services.</strong> Typical mixed-trade company: 17-21% EBITDA. This default is a good operator at 19%. Price: 2.61x SDE (BizBuySell sold avg).</li>
+      <li><strong>HVAC contractor.</strong> Typical HVAC company: 8-14% EBITDA (small shop), 14-20% mixed model. This default is a large 12-tech company at 17%. Price: 2.83x SDE (BizBuySell sold avg).</li>
+      <li><strong>Roofing company.</strong> Typical residential replacement: 10-16% EBITDA. This default 13% (midpoint). Price: 2.1x SDE (sold transactions, Legacy ETA 2026).</li>
+      <li><strong>Self-storage.</strong> Storage values on cap rate, not an earnings multiple: NOI 65% of revenue at a 6.5% cap rate (sector avg 6.59%). Price: NOI / 6.5%.</li>
+      <li><strong>Dental clinic.</strong> Typical dental practice: 15-25% EBITDA; sold median about $558K revenue. This default 20% (midpoint). Price: 2.63x SDE (BizBuySell sold avg).</li>
+      <li><strong>Veterinary clinic.</strong> Typical vet clinic: 18-24% EBITDA; private buyers pay 4-6x SDE for a multi-doctor hospital. This default 21% (midpoint). Price: 4.5x SDE.</li>
+      <li><strong>Craft brewery.</strong> Typical craft brewery: 21-33% EBITDA at a taproom/distribution blend. This default is a successful small regional at 22% EBITDA. Price: 3.7x SDE.</li>
+      <li><strong>Laundromat.</strong> Typical sold store: about $220K revenue, 20-25% EBITDA (BizBuySell median). This default 22% (midpoint). Price: 3.65x SDE.</li>
+      <li><strong>Trucking & Logistics.</strong> Typical sold trucking company: about $1.95M revenue, 20.5% SDE margin. This default is a 12-truck carrier at 20.5% EBITDA, the typical sold-carrier margin. Price: 3.0x SDE (BizBuySell sold avg). Cost split per ATRI 2025.</li>
+      <li><strong>3PL & Warehousing.</strong> Typical 3PL: 5-15% EBITDA (up to about 18% tech-enabled). This default 10% (midpoint). Price: 3.0x SDE.</li>
+      <li><strong>Restaurant.</strong> Typical sold restaurant: about $718K revenue, 10-20% EBITDA. This default is a solid neighborhood spot. Price: 2.15x SDE (BizBuySell sold avg).</li>
+      <li><strong>Boba & Milk Tea Shop.</strong> Typical single boba shop: $250K-450K revenue, 10-25% net margin. This default is a good urban shop at 20% EBITDA. Price: 2.5x SDE.</li>
+      <li><strong>E-commerce Brand.</strong> Typical FBA brand: 15-25% net margin; sold median about $1.0M revenue. This default is an established brand at 18% EBITDA. Price: 3.32x SDE (BizBuySell sold avg).</li>
+      <li><strong>General contractor.</strong> Typical small GC: $2.1M revenue, 8% EBITDA. Price: 2.56x SDE (BizBuySell 2025, 408 construction sales). Note: sold GCs' SDE runs ~23% of revenue incl. owner comp — add the owner's salary in Seller labor for the owner-operator price.</li>
+      <li><strong>Home health care agency.</strong> Typical small agency (non-medical, private-pay): ~$1.1M revenue, 20% EBITDA, sells at ~3.0x SDE (BizBuySell sold median $700K). Price: 3.0x SDE.</li>
+      <li><strong>General business.</strong> No benchmark — a blank starting point. Define one consistent unit (job, customer, order, visit, or contract) and use collected revenue and actual expenses.</li>
+  </ul>
+  <p>Some industries also have scale tiers (for example, trucking by fleet size, general contractor by crew count). A tier&rsquo;s note names its own sources in the model.</p>
+
+  <h2>3. The research behind the presets</h2>
+  <p>The presets draw on sold-transaction data and trade benchmarks, including: BizBuySell sold listings and medians (2025 and sold averages); the NAHB Member Census 2025; the Siana/CFMA 2026 Benchmarker (1,359 verified statements); ATRI&rsquo;s Analysis of the Operational Costs of Trucking, 2026 Update (2025 data) and ATBS full-year 2025 owner-operator figures; the ADA Health Policy Institute dental overhead benchmarks; the Coin Laundry Association 2024 Laundry Industry Survey and the 2022 Economic Census (NAICS 812310); the Visiting Angels franchise disclosure document; Genworth/CareScout care rates; the IBBA market data; Legacy ETA 2026 sold transactions; MMCG 2026 car-wash figures; Wise Wash Partners and the Tommy&rsquo;s Express franchise disclosure document; and 3PL labor benchmarks from Cleverence and MFG Calcs. A source listed here supported the preset or presets named in section 2 — it does not apply to every industry.</p>
+
+  <h2>4. Shared assumptions</h2>
+  <p>These defaults are the same across presets, and each carries its source on the calculator itself, under &ldquo;Where the numbers come from&rdquo;:</p>
+  <ul>
+    <li><strong>Loan rate 10%</strong> — SBA 7(a) typical: prime 7.00% + 3.0% maximum spread for loans over $350K (Federal Reserve H.15 / SBA, October 2026). Rates move; re-check after the December 8&ndash;9, 2026 FOMC meeting.</li>
+    <li><strong>Growth 4% per year</strong> — long-run nominal GDP growth, about 3.8&ndash;4.1% (Congressional Budget Office, Budget and Economic Outlook 2026&ndash;2036, February 2026). Nominal, not real.</li>
+    <li><strong>Tax 25%</strong> — US average combined federal + state corporate rate, 25.5% (Tax Foundation, 2026). A C-corporation basis; pass-through owners pay individual marginal rates, so your tax line will differ.</li>
+    <li><strong>Closing costs 2% of price</strong> — typical deal costs run 1&ndash;4% of price before financing fees (legal + diligence 1&ndash;3%). The SBA guaranty fee is modeled separately, and broker fees are seller-paid.</li>
+    <li><strong>Equity 15%</strong> — the SBA 7(a) minimum is 10% (5% from your own funds); 15% is a typical buyer contribution.</li>
+    <li><strong>Working capital</strong> — receivables, payables, and inventory terms are researched per industry (trucking collects in about 40 days, car wash about 0, general contractor about 75 days plus retainage).</li>
+  </ul>
+
+  <h2>5. The SBA rules applied</h2>
+  <p>The financing math follows SBA SOP 50 10 8.1 (FY2027, effective October 1, 2026) as we understand it:</p>
+  <ul>
+    <li><strong>1.25&times; DSCR</strong> on historical earnings (last fiscal year or two-year average) for acquisitions and buyouts. Projections may no longer carry the test.</li>
+    <li><strong>10% minimum equity</strong>, non-waivable on a first-time acquisition, with at least 5% from the buyer&rsquo;s own funds.</li>
+    <li><strong>$5M loan cap</strong> for SBA 7(a). Deals above it need financing the tools do not model.</li>
+    <li><strong>Guaranty fee</strong> on the guaranteed portion of the loan: 85% guaranteed up to $150,000, 75% above. The fee is 2% of the guaranteed portion up to $150,000; 3% up to $700,000; 3.5% up to $1,000,000; and 3.5% on the first $1,000,000 of the guaranteed portion plus 3.75% on the rest above $1,000,000.</li>
+    <li><strong>Fee waiver:</strong> the guaranty fee is waived — 0% — for loans up to $700,000 in manufacturing (NAICS 31&ndash;33), food supply chain, or rural-area businesses, under SBA Notice 5000-881797 (through September 30, 2027).</li>
+    <li><strong>Quality of Earnings:</strong> at a $3M+ purchase price, the lender must engage an independent Quality of Earnings review and will use QoE-adjusted earnings.</li>
+    <li><strong>Seller note:</strong> a seller note counts toward the equity requirement only on full standby, capped at 5% of total project cost, with 5% own funds still required.</li>
+  </ul>
+
+  <h2>6. The Deal Score, the two DSCRs, and the SDE worksheet</h2>
+  <p><strong>Two DSCRs.</strong> The tools run every deal twice: once on the seller&rsquo;s SDE, and once on lender-adjusted earnings — after the cost of hiring someone to do the owner&rsquo;s job, and after an add-back haircut. The lender&rsquo;s test uses the second one.</p>
+  <p><strong>Deal Score (0&ndash;100).</strong> Three financial parts: DSCR, lender-adjusted, scored from 0.75&times; to 2.25&times; (45 points); levered IRR, scored from 0% to 45% (35 points); equity multiple, scored from 1&times; to 4&times; (20 points). The calculator shows the breakdown under the results, so the score can be checked. Then the risk checks: three questions about owner dependence, customer concentration, and one-off revenue. Each risk you flag takes 5 points off, up to 15, and the breakdown names the risks. The score is a screening device, not a lending decision.</p>
+  <p><strong>SDE worksheet.</strong> Sellers quote SDE from a broker&rsquo;s recast. The worksheet builds it from the tax return instead — net income plus owner compensation, depreciation and amortization, interest, perks, and one-time items — and shows the gap against the seller&rsquo;s number as an implied haircut, capped at 50%. A gap over 50% is flagged for diligence rather than applied. The haircut feeds the lender-adjusted DSCR and the Deal Score through the same path as the slider.</p>
+  <p><strong>What breaks it.</strong> The sensitivity line shows the lender-adjusted DSCR if the rate rises one point, and if SDE comes in 10% lower. It is display-only: it changes no input.</p>
+
+  <h2>7. Caveats, kept in the open</h2>
+  <ul>
+    <li><strong>Averages are not a business.</strong> A preset that fits the industry average can still be wrong for the business in front of you. Price a deal on its own tax returns, not on a preset.</li>
+    <li><strong>Judgment calls exist.</strong> Some inputs are researched averages; some are judgment — seasonality shapes, balance-sheet defaults for asset-light businesses, and the split between variable cost and labor. The research notes mark the weakest data as judgment. Where we know a default is unsourced, we say so rather than inventing a source.</li>
+    <li><strong>The general contractor tension.</strong> Sold GCs price at about 0.60&times; revenue, which implies roughly $1.26M on the default revenue — but 2.56&times; on the default 8% EBITDA gives about $430K. The difference is definitional: sold GCs&rsquo; SDE runs about 23% of revenue because owner-operator SDE includes owner compensation and add-backs, while the calculator&rsquo;s SDE at defaults equals EBITDA. The preset uses the SDE multiple for a consistent method, and the replacement-salary input is the lever that closes the gap for a working owner.</li>
+    <li><strong>Rates and rules move.</strong> Prime, the guaranty fee schedule, and SOP requirements change. The shared assumptions carry their dates; check them before relying on a result.</li>
+    <li><strong>Estimates only.</strong> Every result depends on the numbers entered and on industry averages. A result that passes today may not pass under a lender&rsquo;s current requirements. The tools are educational aids, not professional advice and not a loan offer — see the <a href="terms.html">Terms of Use</a>.</li>
+  </ul>
+
+  <h2>8. Corrections</h2>
+  <p>Found a number that is wrong, a source that has moved, or a rule we have read the wrong way? Tell us through the calculator&rsquo;s suggestion box. The method on this page is a living document: when a preset is re-validated, this page is updated with it.</p>
+</main>
+<footer><p>&copy; 2026 Parallel Space. All rights reserved. · <a href="https://acquisition-calculator.pages.dev/">Main acquisition calculator</a> · <a href="https://reverse-calculator.pages.dev/">Reverse calculator</a> · <a href="https://parallel-space-funding-finder.pages.dev/">Funding finder</a> · <a href="terms.html">Terms of Use</a></p></footer>
+</body>
+</html>
